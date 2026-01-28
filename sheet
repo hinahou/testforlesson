@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026 獅城漫遊 | Singapore Travel App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=League+Spartan:wght@700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: '#70aca7',
+                        lightCyan: '#daefeb',
+                        brightYellow: '#ffca05',
+                        orangeRed: '#f0603c',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['League Spartan', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .day-btn.active { background-color: #70aca7; color: white; border-color: #70aca7; }
+        .timeline-item::before { content: ''; position: absolute; left: 11px; top: 24px; bottom: -24px; width: 2px; background: #daefeb; }
+        .timeline-item:last-child::before { display: none; }
+    </style>
+</head>
+<body class="font-sans text-gray-800 pb-28">
+
+    <header class="bg-mint p-6 rounded-b-[40px] shadow-lg text-white sticky top-0 z-50">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="font-title text-2xl tracking-tighter">SINGAPORE 2026</h1>
+                <p class="text-[10px] text-lightCyan font-light opacity-90 tracking-widest uppercase">Jan 29 - Feb 04</p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold bg-orangeRed px-2 py-1 rounded-full shadow-sm">3 ADULTS</p>
+            </div>
+        </div>
+        <div class="mt-4 flex gap-2 overflow-x-auto hide-scrollbar text-[10px]">
+            <div class="bg-white/20 backdrop-blur-md px-3 py-2 rounded-xl shrink-0"><i class="fas fa-plane mr-1"></i> TR899 16:15-20:55</div>
+            <div class="bg-white/20 backdrop-blur-md px-3 py-2 rounded-xl shrink-0"><i class="fas fa-hotel mr-1"></i> Furama RiverFront</div>
+        </div>
+    </header>
+
+    <main class="px-4 mt-6 max-w-md mx-auto">
+        
+        <section id="plan" class="tab-content active">
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar mb-6 py-2" id="day-selector">
+                </div>
+
+            <div id="itinerary-container" class="space-y-6">
+                </div>
+        </section>
+
+        <section id="guide" class="tab-content space-y-6">
+            <h2 class="font-title text-2xl text-mint mb-4 uppercase tracking-wider">Spotlight Guide</h2>
+            
+            <div class="bg-white p-5 rounded-3xl shadow-sm border-l-8 border-orangeRed">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-lg">萬態園區 Mandai</h3>
+                    <a href="https://www.mandai.com/en/mandai.html" target="_blank" class="text-xs bg-mint text-white px-3 py-1 rounded-full">官方網站</a>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    包含飛禽公園、動物園、夜間動物園及雨林探險。建議下載 Mandai App 查看即時表演與導覽車預約。
+                </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm">
+                <h3 class="font-bold text-lg text-mint mb-4"><i class="fas fa-utensils mr-2"></i>美食深度推薦</h3>
+                <div class="space-y-4">
+                    <div class="border-b pb-3">
+                        <p class="text-sm font-bold">Tiong Bahru Bakery</p>
+                        <p class="text-[10px] text-gray-500 italic">70 River Valley Rd (Fort Canning 店)</p>
+                        <p class="text-xs mt-1">必點：可頌、法式奶油酥 (Kouign Amann)。</p>
+                    </div>
+                    <div class="border-b pb-3">
+                        <p class="text-sm font-bold">松發肉骨茶 (克拉碼頭總店)</p>
+                        <p class="text-[10px] text-gray-500 italic">11 New Bridge Rd (建議 18:00 前抵達)</p>
+                        <p class="text-xs mt-1">必點：特級龍骨湯、滷豬腳、油條。湯頭可無限續加。</p>
+                    </div>
+                    <div class="border-b pb-3">
+                        <p class="text-sm font-bold">Cavern Restaurant 洞穴餐廳</p>
+                        <p class="text-[10px] text-gray-500 italic">Rainforest Wild Asia 園區內</p>
+                        <p class="text-xs mt-1">沉浸式岩層用餐。推薦：熱帶風味烤雞、香料燉肉。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-3xl shadow-sm h-64 overflow-hidden relative">
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=103.81%2C1.28%2C103.86%2C1.31&layer=mapnik" class="w-full h-full border-none rounded-2xl"></iframe>
+                <div class="absolute bottom-8 right-8 bg-white/90 p-2 rounded-lg text-[10px] font-bold shadow-lg">新加坡市區地圖</div>
+            </div>
+        </section>
+
+        <section id="wallet" class="tab-content">
+            <div class="bg-mint p-6 rounded-3xl text-white shadow-lg mb-6 relative overflow-hidden">
+                <div class="relative z-10">
+                    <p class="text-[10px] opacity-80 uppercase tracking-widest mb-1">Currency Converter</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <input id="calc-input" type="text" placeholder="輸入算式, 如 500+200*3" class="w-full bg-white/20 p-4 rounded-2xl text-xl font-title placeholder:text-white/30 outline-none">
+                        <button onclick="calculateFx()" class="bg-brightYellow text-gray-800 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"><i class="fas fa-equals"></i></button>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[10px] opacity-70">匯率設定 (1 SGD =)</p>
+                            <input id="fx-rate" type="number" value="24" class="bg-transparent border-b border-white/30 w-12 text-center text-lg outline-none">
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] opacity-70">預估台幣 (TWD)</p>
+                            <p id="calc-result" class="text-3xl font-title text-brightYellow">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 shadow-sm mb-6">
+                <h3 class="font-title text-xl text-mint mb-4">Expense Tracker</h3>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <input id="exp-name" type="text" placeholder="品項" class="bg-gray-100 p-4 rounded-2xl text-sm outline-none">
+                    <input id="exp-amount" type="number" placeholder="金額 (SGD)" class="bg-gray-100 p-4 rounded-2xl text-sm outline-none">
+                </div>
+                <div class="flex gap-3 mb-6">
+                    <label class="flex-1 bg-lightCyan text-mint py-4 rounded-2xl text-center text-xs font-bold cursor-pointer">
+                        <i class="fas fa-camera mr-2"></i>上傳照片
+                        <input type="file" accept="image/*" capture="environment" id="exp-img" class="hidden" onchange="handleImage(this)">
+                    </label>
+                    <button onclick="addExpense()" class="flex-1 bg-orangeRed text-white py-4 rounded-2xl text-xs font-bold shadow-md shadow-orangeRed/20">新增紀錄</button>
+                </div>
+                <div id="expense-list" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <section id="lists" class="tab-content">
+            <div class="bg-white p-6 rounded-3xl shadow-sm mb-6">
+                <h3 class="font-title text-xl text-mint mb-4 italic">Preparation Checklist</h3>
+                <div id="checklist-container" class="space-y-3"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm">
+                <h3 class="font-title text-xl text-orangeRed mb-4 italic">Personal Memos</h3>
+                <textarea id="note-input" rows="4" placeholder="在這裡貼上連結或備註..." class="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none border-none mb-3"></textarea>
+                <button onclick="saveNote()" class="w-full bg-mint text-white py-4 rounded-2xl font-bold shadow-md">儲存筆記</button>
+                <div id="note-display" class="mt-4 space-y-2"></div>
+            </div>
+        </section>
+
+        <section id="info" class="tab-content space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm">
+                <h3 class="font-bold text-mint mb-4 uppercase tracking-tighter italic">Transport & Tickets</h3>
+                <div class="space-y-4 text-xs">
+                    <div class="p-4 bg-lightCyan/30 rounded-2xl">
+                        <p class="font-bold text-mint mb-1">SimplyGo 感應支付</p>
+                        <p class="text-gray-600">直接使用台灣感應信用卡或 Apple Pay 即可進站，無須購卡或儲值。</p>
+                    </div>
+                    <div class="p-4 bg-orangeRed/5 rounded-2xl border-l-4 border-orangeRed">
+                        <p class="font-bold text-orangeRed mb-1">預約提醒</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>哈利波特：魔法幻象 (1/30 11:00)</li>
+                            <li>萬態園區三園/四園套票 (官網購買)</li>
+                            <li>夜間動物園導覽車 (入場後掃描 QR)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm">
+                <h3 class="font-bold text-orangeRed mb-4 uppercase tracking-tighter italic">Rainy Day Plans</h3>
+                <ul class="text-xs text-gray-600 space-y-3">
+                    <li class="flex items-start"><i class="fas fa-umbrella mr-2 mt-1 text-orangeRed"></i> <span><b>聖淘沙雨天：</b>改前往 S.E.A. 海洋館或杜莎夫人蠟像館。</span></li>
+                    <li class="flex items-start"><i class="fas fa-umbrella mr-2 mt-1 text-orangeRed"></i> <span><b>萬態雨天：</b>改前往濱海灣花園溫室 (Cloud Forest / Flower Dome)。</span></li>
+                    <li class="flex items-start"><i class="fas fa-umbrella mr-2 mt-1 text-orangeRed"></i> <span><b>備用商場：</b>Funan Digital Mall。觀察智慧零售與室內單車徑。</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-stone-100 p-6 rounded-3xl">
+                <h3 class="font-bold text-gray-500 mb-3 text-sm">Packing List</h3>
+                <p class="text-[10px] text-gray-400 mb-2">1/29-2/4 氣溫約 25°C-32°C，仍可能有午後陣雨</p>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-mint"></i> 輕便摺疊傘/雨衣</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-mint"></i> 薄長袖/外套 (冷氣強)</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-mint"></i> 運動鞋 (萬步行程)</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-check text-mint"></i> 防蚊液與防曬</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-around items-center py-4 px-2 z-50 rounded-t-3xl shadow-2xl">
+        <button onclick="switchTab('plan', this)" class="nav-btn flex flex-col items-center text-mint active" data-tab="plan">
+            <i class="fas fa-map-marker-alt text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">PLAN</span>
+        </button>
+        <button onclick="switchTab('guide', this)" class="nav-btn flex flex-col items-center text-gray-300" data-tab="guide">
+            <i class="fas fa-compass text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">GUIDE</span>
+        </button>
+        <button onclick="switchTab('wallet', this)" class="nav-btn flex flex-col items-center text-gray-300" data-tab="wallet">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">WALLET</span>
+        </button>
+        <button onclick="switchTab('lists', this)" class="nav-btn flex flex-col items-center text-gray-300" data-tab="lists">
+            <i class="fas fa-check-double text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">LISTS</span>
+        </button>
+        <button onclick="switchTab('info', this)" class="nav-btn flex flex-col items-center text-gray-300" data-tab="info">
+            <i class="fas fa-info-circle text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- 行程資料 (Word 內容完整導入) ---
+        const itinerary = [
+            { day: "1/29 (四)", title: "抵達獅城", items: [
+                { time: "20:55", task: "抵達樟宜機場 (TR899)", desc: "搭乘地鐵棕線 (TEL) 至 Havelock 站" },
+                { time: "23:00", task: "入住 Furama RiverFront", desc: "405 Havelock Rd, Singapore 169633", map: "Furama RiverFront" },
+                { time: "深夜", task: "羅伯遜碼頭 (Robertson Quay)", desc: "7-Eleven 或 Cheers 補給" }
+            ]},
+            { day: "1/30 (五)", title: "聖淘沙：魔法與冒險", items: [
+                { time: "08:30", task: "中峇魯市場早餐", desc: "123號公車。推薦：楗柏水粿、滷麵" },
+                { time: "11:00", task: "哈利波特：魔法幻象", desc: "預約制行程", highlight: true },
+                { time: "15:00", task: "斜坡滑車 (Skyline Luge)", desc: "玩 4 趟" },
+                { time: "19:00", task: "VivoCity 大食代晚餐", desc: "轉乘紫線至歐南園回飯店" }
+            ]},
+            { day: "1/31 (六)", title: "藝術美學與水陸秀", items: [
+                { time: "10:00", task: "新加坡國家博物館", desc: "公車 143/197。停留 2.5hr" },
+                { time: "15:00", task: "新加坡國家美術館", desc: "停留 2hr" },
+                { time: "19:15", task: "晚餐：Shake Shack (Gardens 店)", desc: "必點：班蘭口味奶昔" },
+                { time: "19:45", task: "天空樹燈光秀 (Garden Rhapsody)", desc: "Supertree Grove (19:45/20:45)", highlight: true },
+                { time: "21:00", task: "金沙酒店水舞秀 (Spectra)", desc: "Event Plaza (20:00/21:00/22:00)", highlight: true }
+            ]},
+            { day: "2/1 (日)", title: "萬態園區：飛禽與文化", items: [
+                { time: "09:00", task: "飛禽公園 (Bird Paradise)", desc: "停留 4.5hr。10:30 猛禽秀, 12:30 世界之翼", highlight: true },
+                { time: "13:30", task: "園區內午餐", desc: "推薦：園區餐廳" },
+                { time: "16:30", task: "小印度 & 小阿拉伯", desc: "轉乘地鐵至 Little India (NE7)" },
+                { time: "18:30", task: "晚餐：Zam Zam 印度煎餅", desc: "傳統道地美食" }
+            ]},
+            { day: "2/2 (一)", title: "萬態園區：經典與夜間", items: [
+                { time: "08:30", task: "新加坡動物園 (Singapore Zoo)", desc: "10:30 海洋動物秀, 12:00 邵氏劇場", highlight: true },
+                { time: "18:00", task: "Ulu Ulu 餐廳晚餐", desc: "南洋料理自助餐 (入口處)" },
+                { time: "19:15", task: "夜間野生動物園 (Night Safari)", desc: "19:30/20:30 表演。需掃碼預約導覽車", highlight: true }
+            ]},
+            { day: "2/3 (二)", title: "雨林探險與肉骨茶", items: [
+                { time: "09:00", task: "亞洲雨林探險園 (Rainforest Wild)", desc: "準時抵達，沉浸式體驗", highlight: true },
+                { time: "12:30", task: "Cavern Restaurant 午餐", desc: "洞穴餐廳體驗" },
+                { time: "17:00", task: "克拉碼頭散步", desc: "採買伴手禮 (小CK、班蘭蛋糕)" },
+                { time: "18:30", task: "松發肉骨茶", desc: "克拉碼頭總店。18:00前抵達免排隊" }
+            ]},
+            { day: "2/4 (三)", title: "星耀樟宜：完美收尾", items: [
+                { time: "10:00", task: "Jewel 星耀樟宜", desc: "觀賞雨漩渦 (Rain Vortex) 噴水" },
+                { time: "11:00", task: "機場最後採購", desc: "Bengawan Solo 班蘭蛋糕、IRVINS 魚皮" },
+                { time: "12:30", task: "TR 896 飛機起飛", desc: "12:30 ~ 17:05 抵台", highlight: true }
+            ]}
+        ];
+
+        // --- 初始化與分頁邏輯 ---
+        let currentDayIdx = 0;
+        let appData = { expenses: [], checklist: [], notes: "" };
+
+        window.onload = () => {
+            const savedData = localStorage.getItem('sg_trip_2026');
+            if (savedData) {
+                appData = JSON.parse(savedData);
+            } else {
+                appData.checklist = ["護照", "網卡 (eSIM)", "SimplyGo 信用卡", "雨衣/摺疊傘", "行動電源", "薄外套", "防蚊液"].map(i => ({ text: i, done: false }));
+            }
+            renderDaySelector();
+            renderItinerary(0);
+            renderChecklist();
+            renderExpenses();
+            renderNotes();
+        };
+
+        function renderDaySelector() {
+            const container = document.getElementById('day-selector');
+            container.innerHTML = itinerary.map((d, idx) => `
+                <button onclick="selectDay(${idx})" class="day-btn shrink-0 px-6 py-2 rounded-full border border-gray-200 text-sm font-bold transition-all ${idx === 0 ? 'active' : 'bg-white text-gray-400'}">
+                    Day ${idx + 1}
+                </button>
+            `).join('');
+        }
+
+        function selectDay(idx) {
+            currentDayIdx = idx;
+            document.querySelectorAll('.day-btn').forEach((btn, i) => {
+                btn.className = `day-btn shrink-0 px-6 py-2 rounded-full border border-gray-200 text-sm font-bold transition-all ${i === idx ? 'active' : 'bg-white text-gray-400'}`;
+            });
+            renderItinerary(idx);
+        }
+
+        function renderItinerary(idx) {
+            const container = document.getElementById('itinerary-container');
+            const data = itinerary[idx];
+            let html = `<div class="mb-4"><span class="text-xs text-mint font-bold uppercase tracking-widest">${data.day}</span><h2 class="text-2xl font-title text-gray-800">${data.title}</h2></div>`;
+            
+            data.items.forEach(item => {
+                html += `
+                    <div class="relative pl-8 timeline-item">
+                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full border-4 ${item.highlight ? 'border-orangeRed bg-white' : 'border-lightCyan bg-white'} z-10 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 rounded-full ${item.highlight ? 'bg-orangeRed' : 'bg-mint'}"></div>
+                        </div>
+                        <div class="mb-6">
+                            <span class="text-[10px] font-bold ${item.highlight ? 'text-orangeRed' : 'text-mint'} bg-gray-100 px-2 py-0.5 rounded">${item.time}</span>
+                            <div class="glass-card p-4 rounded-3xl mt-2 shadow-sm ${item.highlight ? 'border-l-4 border-orangeRed' : ''}">
+                                <p class="text-sm font-bold">${item.task}</p>
+                                <p class="text-[11px] text-gray-500 mt-1">${item.desc}</p>
+                                ${item.map ? `<button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.map)}')" class="mt-2 text-[10px] text-mint underline font-bold italic">在 Google Maps 中查看</button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // --- 核心功能 (換匯, 記帳, 清單) ---
+        function calculateFx() {
+            const input = document.getElementById('calc-input').value;
+            const rate = parseFloat(document.getElementById('fx-rate').value) || 24;
+            try {
+                const cleanInput = input.replace(/[^-+*/().0-9]/g, '');
+                const result = Function('"use strict";return (' + cleanInput + ')')();
+                document.getElementById('calc-result').innerText = Math.round(result * rate).toLocaleString();
+            } catch (e) { alert("輸入格式有誤"); }
+        }
+
+        let currentImgBase = null;
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxW = 200;
+                        const scale = maxW / img.width;
+                        canvas.width = maxW; canvas.height = img.height * scale;
+                        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                        currentImgBase = canvas.toDataURL('image/jpeg', 0.6);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amount = document.getElementById('exp-amount').value;
+            if (!name || !amount) return;
+            appData.expenses.unshift({ name, amount, img: currentImgBase, id: Date.now() });
+            currentImgBase = null; document.getElementById('exp-name').value = ''; document.getElementById('exp-amount').value = '';
+            saveToLocal(); renderExpenses();
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('expense-list');
+            list.innerHTML = appData.expenses.map(exp => `
+                <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-2xl relative">
+                    ${exp.img ? `<img src="${exp.img}" class="w-12 h-12 rounded-lg object-cover">` : `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-[10px] text-gray-400">無圖</div>`}
+                    <div class="flex-1">
+                        <p class="text-xs font-bold">${exp.name}</p>
+                        <p class="text-[10px] text-gray-500">SGD ${exp.amount} (≈ TWD ${exp.amount * 24})</p>
+                    </div>
+                    <button onclick="deleteExpense(${exp.id})" class="text-gray-300 text-xs px-2"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteExpense(id) {
+            appData.expenses = appData.expenses.filter(e => e.id !== id);
+            saveToLocal(); renderExpenses();
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = appData.checklist.map((item, idx) => `
+                <label class="flex items-center gap-3 bg-gray-50 p-4 rounded-2xl cursor-pointer">
+                    <input type="checkbox" onchange="toggleCheck(${idx})" ${item.done ? 'checked' : ''} class="w-5 h-5 accent-mint">
+                    <span class="text-sm ${item.done ? 'line-through text-gray-400 font-light' : 'font-semibold'}">${item.text}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleCheck(idx) { appData.checklist[idx].done = !appData.checklist[idx].done; saveToLocal(); renderChecklist(); }
+
+        function saveNote() { appData.notes = document.getElementById('note-input').value; saveToLocal(); renderNotes(); }
+
+        function renderNotes() {
+            document.getElementById('note-input').value = appData.notes;
+            const display = document.getElementById('note-display');
+            const linked = appData.notes.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-mint underline break-all">$1</a>');
+            display.innerHTML = appData.notes ? `<div class="bg-lightCyan/20 p-4 rounded-2xl text-xs whitespace-pre-wrap">${linked}</div>` : '';
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-mint'); b.classList.add('text-gray-300'); });
+            btn.classList.add('text-mint'); btn.classList.remove('text-gray-300');
+            window.scrollTo(0, 0);
+        }
+
+        function saveToLocal() { localStorage.setItem('sg_trip_2026', JSON.stringify(appData)); }
+
+        function deleteNote(id) { appData.notes = ""; saveToLocal(); renderNotes(); }
+    </script>
+</body>
+</html>
