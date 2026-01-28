@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SG Trip 2026 | 新加坡冒險</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#70aca7',
+                        secondary: '#daefeb',
+                        accent: '#ffca05',
+                        danger: '#f0603c',
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fbfa; -webkit-tap-highlight-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .day-tab.active { background-color: #70aca7; color: white; transform: scale(1.05); }
+        .nav-item.active { color: #70aca7; border-top: 3px solid #70aca7; }
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: #daefeb; }
+        img[src=""] { display: none; }
+    </style>
+</head>
+<body class="pb-24 font-sans text-gray-700">
+
+    <header class="bg-primary p-6 rounded-b-[40px] shadow-lg text-white">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Singapore Trip</h1>
+                <p class="text-sm opacity-90">1/29 - 2/4 | 獅城探險隊</p>
+            </div>
+            <div class="bg-white/20 p-3 rounded-2xl">
+                <i class="fas fa-plane-departure text-xl"></i>
+            </div>
+        </div>
+        <div class="flex gap-4 overflow-x-auto py-2 scroll-hide" id="day-tabs">
+            </div>
+    </header>
+
+    <main id="app-content" class="px-4 py-6 max-w-md mx-auto">
+        </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-2 flex justify-between items-center shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-50">
+        <button onclick="switchView('PLAN')" class="nav-item flex flex-col items-center gap-1 p-2 active" id="nav-PLAN">
+            <i class="fas fa-calendar-alt text-lg"></i>
+            <span class="text-[10px] font-bold">PLAN</span>
+        </button>
+        <button onclick="switchView('GUIDE')" class="nav-item flex flex-col items-center gap-1 p-2" id="nav-GUIDE">
+            <i class="fas fa-map-marked-alt text-lg"></i>
+            <span class="text-[10px] font-bold">GUIDE</span>
+        </button>
+        <button onclick="switchView('WALLET')" class="nav-item flex flex-col items-center gap-1 p-2" id="nav-WALLET">
+            <i class="fas fa-wallet text-lg"></i>
+            <span class="text-[10px] font-bold">WALLET</span>
+        </button>
+        <button onclick="switchView('LISTS')" class="nav-item flex flex-col items-center gap-1 p-2" id="nav-LISTS">
+            <i class="fas fa-tasks text-lg"></i>
+            <span class="text-[10px] font-bold">LISTS</span>
+        </button>
+        <button onclick="switchView('INFO')" class="nav-item flex flex-col items-center gap-1 p-2" id="nav-INFO">
+            <i class="fas fa-info-circle text-lg"></i>
+            <span class="text-[10px] font-bold">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- Data Definitions ---
+        const ITINERARY_DATA = [
+            {
+                day: 1, date: '1/29 (四)', theme: '抵達獅城',
+                items: [
+                    { time: '16:15', task: '去程航班：酷行 TR899', desc: '16:15 ～ 20:55', isMajor: true },
+                    { time: '20:55', task: '抵達樟宜機場', desc: '辦理入境手續' },
+                    { time: '22:15', task: '搭乘地鐵棕線 (TEL)', desc: 'Changi Airport 站 → Havelock (TE16) 站 (約 50 分鐘)' },
+                    { time: '23:00', task: 'Furama RiverFront 入住', desc: '405 Havelock Rd, Singapore 169633', isMajor: true },
+                    { time: '深夜', task: '羅伯遜碼頭採買', desc: '飯店後方步行 5-8 分。7-Eleven (Havelock Rd) 或 Cheers (Great World 門口)' }
+                ]
+            },
+            {
+                day: 2, date: '1/30 (五)', theme: '聖淘沙冒險',
+                items: [
+                    { time: '08:30', task: '早餐：中峇魯市場', desc: '搭 123 號公車。推薦：楗柏水粿、中峇魯滷麵。', gmap: 'Tiong Bahru Market' },
+                    { time: '10:15', task: '交通往聖淘沙', desc: 'Outram Park 轉紫線至 HarbourFront，再轉輕軌或 RWS8 入島。' },
+                    { time: '11:00', task: '哈利波特：魔法幻象', desc: '預約制場次', isMajor: true },
+                    { time: '13:00', task: '午餐：聖淘沙美食街', desc: '推薦：禤記瓦煲雞飯', gmap: 'Malaysian Food Street Sentosa' },
+                    { time: '15:00', task: '斜坡滑車 Skyline Luge', desc: '爽玩 4 趟', isMajor: true },
+                    { time: '17:00', task: '聖淘沙賭場 & 巴拉望海灘', desc: '漫步夕陽海景' },
+                    { time: '19:00', task: '晚餐：VivoCity 美食閣', desc: 'Food Republic 豐富選擇' },
+                    { time: '20:00', task: '回程飯店', desc: '港灣站搭紫線 → 歐南園轉棕線 → Havelock (約 30 分鐘)' }
+                ]
+            },
+            {
+                day: 3, date: '1/31 (六)', theme: '飛禽世界之旅',
+                items: [
+                    { time: '08:15', task: '出發萬態園區', desc: '地鐵棕線至 Lentor 轉 Mandai Shuttle 接駁車。' },
+                    { time: '09:00', task: '景點：飛禽公園 (Bird Paradise)', desc: '準時入場。10:30 有飛翔掠食者表演。', isMajor: true },
+                    { time: '13:30', task: '午餐：園區內餐廳', desc: '就近用餐補體力' },
+                    { time: '16:30', task: '小印度 & 小阿拉伯', desc: '走訪充滿香料與色彩的街道', gmap: 'Little India Singapore' },
+                    { time: '18:30', task: '晚餐：Zam Zam 印度煎餅', desc: '必吃百年老店', gmap: 'Singapore Zam Zam' }
+                ]
+            },
+            {
+                day: 4, date: '2/1 (日)', theme: '城市藝術與燈光',
+                items: [
+                    { time: '09:00', task: '早餐：Tiong Bahru Bakery', desc: 'Fort Canning 店。氛圍極佳。' },
+                    { time: '10:00', task: '新加坡國家博物館', desc: '探索新加坡歷史 (停留 2.5 小時)', isMajor: true },
+                    { time: '13:00', task: '午餐：National Gallery 內', desc: '或附近簡餐' },
+                    { time: '15:00', task: '新加坡國家美術館', desc: '藝術洗禮 (停留 2 小時)' },
+                    { time: '17:30', task: '魚尾獅公園', desc: '打卡拍照、漫步濱海灣' },
+                    { time: '19:15', task: '晚餐：Shake Shack', desc: 'Gardens by the Bay 店。' },
+                    { time: '19:45', task: '天空樹燈光秀', desc: 'Supertree Grove。表演 15 分鐘', isMajor: true },
+                    { time: '21:00', task: '金沙酒店水舞秀', desc: '從天空樹步行 15 分鐘至 Event Plaza。' }
+                ]
+            },
+            {
+                day: 5, date: '2/2 (一)', theme: '動物園與夜間探險',
+                items: [
+                    { time: '07:45', task: '出發動物園', desc: '搭 Mandai Shuttle 前往萬態園區。' },
+                    { time: '08:30', task: '新加坡動物園', desc: '與紅毛猩猩近距離，10:30 海洋動物表演。', isMajor: true },
+                    { time: '13:00', task: '午餐：Ah Meng Restaurant', desc: '園區內最知名的主題餐廳' },
+                    { time: '18:00', task: '晚餐：Ulu Ulu Safari', desc: '夜間動物園入口，南洋料理自助。' },
+                    { time: '19:15', task: '夜間野生動物園 (Night Safari)', desc: '7:30 有精靈表演 (需提前 2hr 預訂座位)', isMajor: true }
+                ]
+            },
+            {
+                day: 6, date: '2/3 (二)', theme: '亞洲雨林探險',
+                items: [
+                    { time: '09:00', task: '亞洲雨林探險園', desc: 'Rainforest Wild Asia 探秘。', isMajor: true },
+                    { time: '12:30', task: '午餐：Cavern Restaurant', desc: '岩層洞穴餐廳，沉浸感十足！', gmap: 'Cavern Restaurant Mandai' },
+                    { time: '16:30', task: '克拉碼頭散步', desc: '沿岸風景，採買伴手禮。' },
+                    { time: '18:30', task: '晚餐：松發肉骨茶', desc: '克拉碼頭總店 (建議 18:00 前抵達)。', isMajor: true, gmap: 'Song Fa Bak Kut Teh' }
+                ]
+            },
+            {
+                day: 7, date: '2/4 (三)', theme: '星耀樟宜',
+                items: [
+                    { time: '08:00', task: '退房前往機場', desc: '地鐵 TE 線轉公車 36 號至 T1。' },
+                    { time: '10:00', task: '星耀樟宜：雨漩渦', desc: '必拍室內瀑布。' },
+                    { time: '11:00', task: '最後採購：Jewel B2', desc: '小CK、斑蘭蛋糕、百勝廚叻沙、Bacha Coffee。' },
+                    { time: '12:30', task: '回程航班：酷行 TR896', desc: '12:30 ～ 17:05。準備返家！', isMajor: true }
+                ]
+            }
+        ];
+
+        const GUIDE_DATA = [
+            { name: '中峇魯', info: '新加坡最古老的住宅區，現為文青聚集地，其傳統市場有非常多平民美食。', lat: 1.285, lng: 103.832 },
+            { name: '聖淘沙', info: '充滿娛樂設施的海島，從環球影城到沙灘酒吧應有盡有。', lat: 1.249, lng: 103.830 },
+            { name: '飛禽公園', info: '全亞洲最大的飛禽公園，擁有超過3,500隻鳥類，環境優美。', lat: 1.402, lng: 103.782 },
+            { name: '魚尾獅公園', info: '新加坡最經典的地標，噴水魚尾獅寓意獅城起源。', lat: 1.286, lng: 103.854 },
+            { name: '濱海灣花園', info: '由巨大天空樹組成的未來派花園，晚上有精彩的燈光秀。', lat: 1.281, lng: 103.863 },
+            { name: '夜間野生動物園', info: '世界首座夜間開放的動物園，可以搭乘遊覽車觀察夜行動物。', lat: 1.402, lng: 103.788 }
+        ];
+
+        // --- State Management ---
+        let currentView = 'PLAN';
+        let currentDay = 1;
+        let expenses = JSON.parse(localStorage.getItem('sg_expenses') || '[]');
+        let checklists = JSON.parse(localStorage.getItem('sg_checklist') || '[]');
+        let notes = localStorage.getItem('sg_notes') || '';
+
+        // --- View Controller ---
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${view}`).classList.add('active');
+            renderApp();
+        }
+
+        function setDay(day) {
+            currentDay = day;
+            renderDayTabs();
+            renderApp();
+        }
+
+        // --- Renderers ---
+        function renderDayTabs() {
+            const container = document.getElementById('day-tabs');
+            container.innerHTML = ITINERARY_DATA.map(d => `
+                <button onclick="setDay(${d.day})" class="day-tab px-5 py-2 rounded-2xl whitespace-nowrap text-sm font-bold transition-all ${currentDay === d.day ? 'active shadow-md' : 'bg-white/30'}">
+                    Day ${d.day}
+                </button>
+            `).join('');
+        }
+
+        function renderApp() {
+            const main = document.getElementById('app-content');
+            
+            if (currentView === 'PLAN') {
+                const dayInfo = ITINERARY_DATA.find(d => d.day === currentDay);
+                main.innerHTML = `
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold text-primary">${dayInfo.date}</h2>
+                        <p class="text-gray-500 text-sm">${dayInfo.theme}</p>
+                    </div>
+                    <div class="relative timeline-line ml-2">
+                        ${dayInfo.items.map(item => `
+                            <div class="relative pl-10 mb-6">
+                                <div class="absolute left-0 top-1 w-8 h-8 ${item.isMajor ? 'bg-accent' : 'bg-secondary'} rounded-full flex items-center justify-center border-4 border-white z-10">
+                                    <i class="fas ${item.isMajor ? 'fa-star text-white' : 'fa-clock text-primary'} text-xs"></i>
+                                </div>
+                                <div class="glass-card p-4 rounded-3xl shadow-sm border-l-4 ${item.isMajor ? 'border-accent' : 'border-primary'}">
+                                    <div class="flex justify-between items-start">
+                                        <span class="text-xs font-bold text-primary">${item.time}</span>
+                                        ${item.gmap ? `<button onclick="window.open('https://www.google.com/maps/search/${item.gmap}')" class="text-xs text-blue-500 font-bold"><i class="fas fa-map-marker-alt"></i> 地圖</button>` : ''}
+                                    </div>
+                                    <h3 class="font-bold text-gray-800 my-1">${item.task}</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">${item.desc}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            else if (currentView === 'GUIDE') {
+                main.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-6 text-primary"><i class="fas fa-book-open mr-2"></i>深度導覽</h2>
+                    ${GUIDE_DATA.map((g, idx) => `
+                        <details class="mb-4 group">
+                            <summary class="list-none glass-card p-4 rounded-2xl shadow-sm flex justify-between items-center cursor-pointer">
+                                <span class="font-bold">${g.name}</span>
+                                <i class="fas fa-chevron-down text-primary group-open:rotate-180 transition"></i>
+                            </summary>
+                            <div class="mt-2 p-4 bg-white rounded-2xl text-sm leading-relaxed border border-secondary">
+                                <p class="mb-3">${g.info}</p>
+                                <iframe width="100%" height="200" class="rounded-xl" src="https://www.openstreetmap.org/export/embed.html?bbox=${g.lng-0.01},${g.lat-0.01},${g.lng+0.01},${g.lat+0.01}&layer=mapnik&marker=${g.lat},${g.lng}"></iframe>
+                            </div>
+                        </details>
+                    `).join('')}
+                `;
+            }
+
+            else if (currentView === 'WALLET') {
+                main.innerHTML = `
+                    <div class="bg-primary p-6 rounded-3xl text-white mb-6">
+                        <p class="text-xs opacity-80 mb-1">匯率換算器 (1 SGD ≈ 24 TWD)</p>
+                        <div class="flex items-center gap-4">
+                            <input type="number" id="calc-sgd" oninput="convertCurrency('SGD')" placeholder="SGD" class="w-full bg-white/20 border-none rounded-xl p-2 text-white placeholder-white/50 focus:ring-2 ring-accent outline-none">
+                            <i class="fas fa-exchange-alt"></i>
+                            <input type="number" id="calc-twd" oninput="convertCurrency('TWD')" placeholder="TWD" class="w-full bg-white/20 border-none rounded-xl p-2 text-white placeholder-white/50 focus:ring-2 ring-accent outline-none">
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl mb-6 shadow-md border-t-4 border-accent">
+                        <h3 class="font-bold mb-4 text-gray-700">新增消費</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="exp-name" placeholder="品項名稱" class="w-full p-3 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                            <div class="flex gap-2">
+                                <input type="number" id="exp-amt" placeholder="SGD 金額" class="w-full p-3 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                                <label class="bg-secondary p-3 rounded-xl cursor-pointer">
+                                    <i class="fas fa-camera text-primary"></i>
+                                    <input type="file" accept="image/*" id="exp-img" class="hidden" onchange="handleImage(this)">
+                                </label>
+                            </div>
+                            <img id="img-preview" class="w-full h-32 object-cover rounded-xl mt-2 hidden">
+                            <button onclick="addExpense()" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-90 transition">儲存收據</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4" id="expense-list">
+                        ${renderExpenses()}
+                    </div>
+                `;
+            }
+
+            else if (currentView === 'LISTS') {
+                main.innerHTML = `
+                    <h2 class="text-2xl font-bold mb-4 text-primary">行李清單</h2>
+                    <div class="glass-card p-4 rounded-3xl mb-8">
+                        ${['護照', '網卡', '雨衣', '行動電源', '充電器'].map(item => `
+                            <label class="flex items-center gap-3 p-3 border-b border-gray-50 last:border-none">
+                                <input type="checkbox" class="w-5 h-5 accent-primary" onchange="saveChecklist()">
+                                <span class="text-sm font-medium">${item}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+
+                    <h2 class="text-2xl font-bold mb-4 text-primary">個人備忘錄</h2>
+                    <textarea id="note-area" oninput="saveNotes()" class="w-full h-40 p-4 bg-white rounded-3xl shadow-inner border border-secondary outline-none text-sm" placeholder="輸入網址會自動轉連結...">${notes}</textarea>
+                    <div class="mt-2" id="link-container"></div>
+                `;
+                detectLinks();
+            }
+
+            else if (currentView === 'INFO') {
+                main.innerHTML = `
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <a href="https://www.weather.gov.sg/home/" target="_blank" class="bg-blue-50 p-4 rounded-3xl flex flex-col items-center gap-2">
+                            <i class="fas fa-cloud-sun text-2xl text-blue-400"></i>
+                            <span class="text-xs font-bold">當地天氣</span>
+                        </a>
+                        <div class="bg-red-50 p-4 rounded-3xl flex flex-col items-center gap-2">
+                            <i class="fas fa-phone-alt text-2xl text-red-400"></i>
+                            <span class="text-xs font-bold">緊急連絡: 999</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-5 rounded-3xl border-l-4 border-danger mb-6">
+                        <h3 class="font-bold text-danger mb-2">雨天備案 (RAIN)</h3>
+                        <ul class="text-xs space-y-2 text-gray-600">
+                            <li>• <b>聖淘沙：</b>改往 S.E.A. 海洋館 (全室內)。</li>
+                            <li>• <b>萬態園區：</b>改往濱海灣花園溫室 (Cloud Forest)。</li>
+                            <li>• <b>替代：</b>Funan Digital Mall (室內單車徑與科技感)。</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-3xl border-l-4 border-primary">
+                        <h3 class="font-bold text-primary mb-2">注意事項</h3>
+                        <ul class="text-xs space-y-2 text-gray-600">
+                            <li>• <b>公車：</b>不報站，請用 Google Maps 定位，下車按鈴。</li>
+                            <li>• <b>接駁車：</b>Khatib 站 A 出口，班次準時。</li>
+                            <li>• <b>飲水：</b>水龍頭可飲用，帶空水壺可省錢。</li>
+                            <li>• <b>24H：</b>Great World 內超市營業至 22:00。</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Wallet Logic ---
+        function convertCurrency(type) {
+            const sgdInput = document.getElementById('calc-sgd');
+            const twdInput = document.getElementById('calc-twd');
+            if (type === 'SGD') {
+                twdInput.value = (sgdInput.value * 24).toFixed(0);
+            } else {
+                sgdInput.value = (twdInput.value / 24).toFixed(2);
+            }
+        }
+
+        let tempImageData = "";
+        function handleImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxWidth = 200;
+                    const scaleSize = maxWidth / img.width;
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    tempImageData = canvas.toDataURL('image/jpeg', 0.6);
+                    const preview = document.getElementById('img-preview');
+                    preview.src = tempImageData;
+                    preview.classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amt = document.getElementById('exp-amt').value;
+            if (!name ||
