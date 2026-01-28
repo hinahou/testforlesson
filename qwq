@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SG Travel 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: '#70aca7',
+                        lightCyan: '#daefeb',
+                        brightYellow: '#ffca05',
+                        orangeRed: '#f0603c'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fbfa; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-card { background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(112, 172, 167, 0.08); }
+        .nav-active { color: #70aca7 !important; border-top: 3px solid #70aca7; }
+        .transport-tag { background: #daefeb; color: #70aca7; border-radius: 8px; font-size: 10px; padding: 2px 8px; font-weight: 900; }
+        .time-badge { background: #70aca7; color: white; border-radius: 8px; font-size: 11px; padding: 2px 8px; font-weight: 700; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <header class="p-5 bg-white sticky top-0 z-50 flex justify-between items-center shadow-sm">
+        <div>
+            <h1 class="text-xl font-black text-mint">SG ADVENTURE</h1>
+            <p class="text-[9px] font-bold text-gray-400 tracking-widest uppercase">Travel Tool 2026</p>
+        </div>
+        <a href="https://www.weather.gov.sg/home/" target="_blank" class="text-mint"><i class="fas fa-sun text-xl"></i></a>
+    </header>
+
+    <main id="app" class="px-4 py-4">
+        <div class="flex justify-center items-center h-64 text-gray-400">Loading your trip...</div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-50">
+        <button onclick="router('PLAN')" id="nav-PLAN" class="nav-item flex flex-col items-center gap-1 text-gray-300 w-1/5 pt-2 transition-all">
+            <i class="fas fa-calendar-alt text-lg"></i>
+            <span class="text-[10px] font-black tracking-tighter">PLAN</span>
+        </button>
+        <button onclick="router('GUIDE')" id="nav-GUIDE" class="nav-item flex flex-col items-center gap-1 text-gray-300 w-1/5 pt-2 transition-all">
+            <i class="fas fa-map-marked text-lg"></i>
+            <span class="text-[10px] font-black tracking-tighter">GUIDE</span>
+        </button>
+        <button onclick="router('WALLET')" id="nav-WALLET" class="nav-item flex flex-col items-center gap-1 text-gray-300 w-1/5 pt-2 transition-all">
+            <i class="fas fa-wallet text-lg"></i>
+            <span class="text-[10px] font-black tracking-tighter">WALLET</span>
+        </button>
+        <button onclick="router('LISTS')" id="nav-LISTS" class="nav-item flex flex-col items-center gap-1 text-gray-300 w-1/5 pt-2 transition-all">
+            <i class="fas fa-check-double text-lg"></i>
+            <span class="text-[10px] font-black tracking-tighter">LISTS</span>
+        </button>
+        <button onclick="router('INFO')" id="nav-INFO" class="nav-item flex flex-col items-center gap-1 text-gray-300 w-1/5 pt-2 transition-all">
+            <i class="fas fa-info-circle text-lg"></i>
+            <span class="text-[10px] font-black tracking-tighter">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // 行程資料整合 
+        const tripData = [
+            {
+                day: 1, date: '1/29 (THU)', title: 'Arrival & Check-in',
+                items: [
+                    { time: '20:55', title: 'Changi Airport', type: 'spot', map: 'https://maps.app.goo.gl/Changi' },
+                    { time: '22:15', title: 'MRT TEL Line', type: 'bus', desc: 'Changi Airport -> Havelock (TE16) [cite: 3]' },
+                    { time: '23:00', title: 'Furama RiverFront', type: 'spot', map: 'https://maps.app.goo.gl/Furama', desc: 'Hotel check-in [cite: 4]' },
+                    { time: 'Late', title: 'Robertson Quay', type: 'spot', map: 'https://maps.app.goo.gl/Robertson', desc: '24H convenience stores [cite: 5-7]' }
+                ]
+            },
+            {
+                day: 2, date: '1/30 (FRI)', title: 'Sentosa Adventure',
+                items: [
+                    { time: '08:30', title: 'Tiong Bahru Market', type: 'food', map: 'https://maps.app.goo.gl/TBM', desc: '楗柏水粿、中峇魯滷麵 [cite: 9, 11]' },
+                    { time: '09:30', title: 'Bus 123 to Sentosa', type: 'bus', desc: '3 stops to VivoCity/Sentosa [cite: 10, 12]' },
+                    { time: '11:00', title: 'Harry Potter Vision', type: 'spot', map: 'https://maps.app.goo.gl/HP', desc: '★預約制 [cite: 13]' },
+                    { time: '13:00', title: 'Sentosa Food Street', type: 'food', map: 'https://maps.app.goo.gl/MFS', desc: '禤記瓦煲雞飯 [cite: 14]' },
+                    { time: '15:00', title: 'Skyline Luge', type: 'spot', map: 'https://maps.app.goo.gl/Luge', desc: '4 rounds [cite: 15]' },
+                    { time: '17:00', title: 'Palawan Beach & Casino', type: 'spot', map: 'https://maps.app.goo.gl/Palawan', desc: '[cite: 16]' },
+                    { time: '19:00', title: 'Food Republic', type: 'food', map: 'https://maps.app.goo.gl/Vivo', desc: 'VivoCity Dinner [cite: 17]' },
+                    { time: '20:00', title: 'Return Transit', type: 'bus', desc: 'MRT NE Line -> TE Line back to Havelock [cite: 18-22]' }
+                ]
+            },
+            {
+                day: 3, date: '1/31 (SAT)', title: 'Mandai: Bird Paradise',
+                items: [
+                    { time: '08:15', title: 'Mandai Shuttle', type: 'bus', desc: 'Havelock TEL -> Khatib -> Shuttle [cite: 24]' },
+                    { time: '09:00', title: 'Bird Paradise', type: 'spot', map: 'https://maps.app.goo.gl/BirdP', desc: 'Shows: 10:30 & 12:30 [cite: 25-26]' },
+                    { time: '16:30', title: 'Little India & Arab St', type: 'spot', map: 'https://maps.app.goo.gl/LittleIndia', desc: '[cite: 30]' },
+                    { time: '18:30', title: 'Zam Zam Murtabak', type: 'food', map: 'https://maps.app.goo.gl/ZamZam', desc: 'Indian Pancakes [cite: 31]' }
+                ]
+            },
+            {
+                day: 4, date: '2/1 (SUN)', title: 'Art & City Classics',
+                items: [
+                    { time: '09:00', title: 'Tiong Bahru Bakery', type: 'food', map: 'https://maps.app.goo.gl/TBB', desc: 'Fort Canning branch [cite: 33]' },
+                    { time: '10:00', title: 'National Museum SG', type: 'spot', map: 'https://maps.app.goo.gl/NMSG', desc: '[cite: 35]' },
+                    { time: '15:00', title: 'National Gallery SG', type: 'spot', map: 'https://maps.app.goo.gl/NGS', desc: '[cite: 37]' },
+                    { time: '17:30', title: 'Merlion Park', type: 'spot', map: 'https://maps.app.goo.gl/Merlion', desc: '[cite: 38]' },
+                    { time: '19:45', title: '★ Supertree Rhapsody', type: 'spot', map: 'https://maps.app.goo.gl/Supertree', desc: 'Light show at Gardens by the Bay [cite: 39-40]' },
+                    { time: '21:00', title: '★ Spectra Water Show', type: 'spot', map: 'https://maps.app.goo.gl/Spectra', desc: 'MBS Event Plaza [cite: 41-42]' }
+                ]
+            },
+            {
+                day: 5, date: '2/2 (MON)', title: 'Mandai: Night Safari',
+                items: [
+                    { time: '08:30', title: 'Singapore Zoo', type: 'spot', map: 'https://maps.app.goo.gl/Zoo', desc: 'Animal Shows: 10:30, 12:00 [cite: 45-46]' },
+                    { time: '13:00', title: 'Ah Meng Restaurant', type: 'food', map: 'https://maps.app.goo.gl/AhMeng', desc: '[cite: 47]' },
+                    { time: '18:00', title: 'Ulu Ulu Restaurant', type: 'food', map: 'https://maps.app.goo.gl/UluUlu', desc: '[cite: 49-50]' },
+                    { time: '19:15', title: 'Night Safari', type: 'spot', map: 'https://maps.app.goo.gl/NightSafari', desc: 'Creatures show: 19:30 [cite: 51-52]' },
+                    { time: '22:00', title: 'Return Transit', type: 'bus', desc: 'Shuttle -> Red Line -> Brown Line [cite: 53-56]' }
+                ]
+            },
+            {
+                day: 6, date: '2/3 (TUE)', title: 'Rainforest & Bak Kut Teh',
+                items: [
+                    { time: '09:00', title: 'Rainforest Wild Asia', type: 'spot', map: 'https://maps.app.goo.gl/RFWA', desc: '[cite: 59]' },
+                    { time: '12:30', title: 'Cavern Restaurant', type: 'food', map: 'https://maps.app.goo.gl/Cavern', desc: 'Rock-themed immersive dining [cite: 60]' },
+                    { time: '15:30', title: 'Transit to Clarke Quay', type: 'bus', desc: 'Bus 171 -> 190 [cite: 61-64]' },
+                    { time: '18:30', title: 'Song Fa BKT', type: 'food', map: 'https://maps.app.goo.gl/SongFa', desc: 'Suggest arriving by 18:00 [cite: 67-68]' }
+                ]
+            },
+            {
+                day: 7, date: '2/4 (WED)', title: 'Jewel & Departure',
+                items: [
+                    { time: '08:00', title: 'Transit to Airport', type: 'bus', desc: 'MRT TEL -> Bus 36 [cite: 70-74]' },
+                    { time: '10:00', title: 'Jewel Rain Vortex', type: 'spot', map: 'https://maps.app.goo.gl/Jewel', desc: '[cite: 75]' },
+                    { time: '11:00', title: 'Jewel Shopping', type: 'spot', map: 'https://maps.app.goo.gl/JewelShop', desc: 'B2 Supermarket, Bengawan Solo, IRVINS [cite: 76-82]' },
+                    { time: '12:30', title: 'Departure (TR896)', type: 'bus', desc: '[cite: 83]' }
+                ]
+            }
+        ];
+
+        let currentDay = 1;
+        let expenses = JSON.parse(localStorage.getItem('sg_expenses')) || [];
+
+        function router(page) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            document.getElementById(`nav-${page}`).classList.add('nav-active');
+            
+            const app = document.getElementById('app');
+            app.innerHTML = '';
+
+            if (page === 'PLAN') renderPlan(app);
+            else if (page === 'GUIDE') renderGuide(app);
+            else if (page === 'WALLET') renderWallet(app);
+            else if (page === 'LISTS') renderLists(app);
+            else if (page === 'INFO') renderInfo(app);
+            window.scrollTo(0,0);
+        }
+
+        function renderPlan(app) {
+            let dayHtml = `<div class="flex gap-2 overflow-x-auto no-scrollbar pb-4 mb-2">`;
+            for(let i=1; i<=7; i++) {
+                dayHtml += `<button onclick="setDay(${i})" class="flex-shrink-0 px-5 py-2 rounded-full font-black text-xs ${currentDay === i ? 'bg-mint text-white' : 'bg-white text-gray-400'}">DAY ${i}</button>`;
+            }
+            dayHtml += `</div>`;
+
+            let itemsHtml = `<div class="space-y-4">`;
+            tripData[currentDay-1].items.forEach(item => {
+                itemsHtml += `
+                    <div class="glass-card p-5 flex flex-col gap-1 relative overflow-hidden">
+                        <div class="flex justify-between items-start">
+                            <span class="time-badge">${item.time}</span>
+                            ${item.map ? `<a href="${item.map}" target="_blank" class="text-mint"><i class="fas fa-directions text-xl"></i></a>` : `<span class="transport-tag">TRANSIT</span>`}
+                        </div>
+                        <h3 class="font-black text-gray-800 text-lg mt-1">${item.title}</h3>
+                        ${item.desc ? `<p class="text-[11px] text-gray-400 font-bold leading-tight">${item.desc}</p>` : ''}
+                    </div>
+                `;
+            });
+            itemsHtml += `</div>`;
+            app.innerHTML = dayHtml + `<div class="mb-4"><h2 class="text-2xl font-black text-mint">${tripData[currentDay-1].title}</h2><p class="text-xs font-bold text-gray-300 uppercase tracking-tighter">${tripData[currentDay-1].date}</p></div>` + itemsHtml;
+        }
+
+        function setDay(d) { currentDay = d; renderPlan(document.getElementById('app')); }
+
+        function renderWallet(app) {
+            const total = expenses.reduce((s, e) => s + parseFloat(e.amt || 0), 0);
+            app.innerHTML = `
+                <div class="glass-card p-6 mb-6 bg-gradient-to-br from-mint to-teal-600 text-white">
+                    <p class="text-[10px] font-black uppercase opacity-70">Total Spend</p>
+                    <h2 class="text-3xl font-black">$ ${total.toFixed(2)} SGD</h2>
+                    <p class="text-xs font-bold opacity-80 mt-1">Approx. NT$ ${Math.round(total * 24.5)}</p>
+                </div>
+                <div class="glass-card p-5 mb-5">
+                    <input id="exp-item" type="text" placeholder="Item Name" class="w-full mb-3 p-3 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                    <input id="exp-amt" type="number" placeholder="SGD Amount" class="w-full mb-4 p-3 bg-gray-50 rounded-xl border-none text-sm outline-none">
+                    <button onclick="addExp()" class="w-full bg-mint text-white font-black py-3 rounded-xl shadow-md active:scale-95 transition-all">ADD RECORD</button>
+                </div>
+                <div class="space-y-2">
+                    ${expenses.slice().reverse().map(e => `<div class="glass-card p-4 flex justify-between items-center"><span class="font-black text-gray-700">${e.item}</span><span class="text-mint font-black">$${e.amt}</span></div>`).join('')}
+                </div>
+            `;
+        }
+
+        function addExp() {
+            const item = document.getElementById('exp-item').value;
+            const amt = document.getElementById('exp-amt').value;
+            if(item && amt) {
+                expenses.push({item, amt});
+                localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+                renderWallet(document.getElementById('app'));
+            }
+        }
+
+        function renderLists(app) {
+            app.innerHTML = `
+                <div class="glass-card p-6">
+                    <h3 class="font-black text-xl mb-5 text-gray-800 tracking-tighter">Travel Checklist</h3>
+                    <div class="space-y-4">
+                        ${['Passport & Visa', 'eSIM / Data Roaming', 'Power Bank & Cables', '3 Empty Bottles (for water)', 'Light Raincoat'].map(check => `
+                            <label class="flex items-center gap-3 font-bold text-gray-500"><input type="checkbox" class="w-5 h-5 accent-mint"> ${check}</label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInfo(app) {
+            app.innerHTML = `
+                <div class="space-y-4">
+                    <div class="glass-card p-6 bg-orangeRed text-white">
+                        <h3 class="font-black text-lg mb-2 italic">EMERGENCY</h3>
+                        <p class="text-xs font-bold">Police: 999 | Ambulance: 995</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="font-black text-mint mb-3">TIPS [cite: 84-89]</h3>
+                        <div class="text-[11px] font-bold text-gray-400 space-y-4 leading-relaxed">
+                            <p>● <span class="text-gray-800 uppercase">Bus:</span> No station announcements! Watch Google Maps and press bell early.</p>
+                            <p>● <span class="text-gray-800 uppercase">Water:</span> Tap water is drinkable. Refill bottles to save money.</p>
+                            <p>● <span class="text-gray-800 uppercase">Shuttle:</span> Mandai Khatib (NS14) Exit A is very punctual.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGuide(app) {
+            app.innerHTML = `<div class="p-10 text-center font-black text-gray-300">EXPLORE GUIDES COMING SOON...</div>`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            router('PLAN');
+        });
+    </script>
+</body>
+</html>
