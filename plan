@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SG Travel Tool - 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #70aca7;
+            --secondary: #daefeb;
+            --accent-yellow: #ffca05;
+            --accent-orange: #f0603c;
+            --bg-light: #f8fbfa;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-light);
+            color: #333;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-heavy { font-weight: 900; }
+        .font-medium { font-weight: 500; }
+
+        .tab-active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(112, 172, 167, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+            background-color: #5a8e8a;
+        }
+
+        .nav-shadow {
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* 隱藏捲軸但保持滾動 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            left: -6px;
+            top: 8px;
+        }
+
+        .timeline-line {
+            border-left: 2px dashed var(--secondary);
+            margin-left: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        input:checked + label svg {
+            display: block;
+        }
+    </style>
+</head>
+<body class="pb-24">
+
+    <header class="p-6 bg-white sticky top-0 z-50 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-heavy text-[#70aca7]">SG Adventure</h1>
+            <p class="text-xs text-gray-400">Singapore Trip 2025</p>
+        </div>
+        <div id="weather-icon" class="text-2xl text-yellow-400">
+            <i class="fas fa-sun"></i>
+        </div>
+    </header>
+
+    <main id="app" class="px-4 pt-4">
+        </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white h-20 flex items-center justify-around px-2 nav-shadow rounded-t-[30px] z-50">
+        <button onclick="router('PLAN')" class="nav-item flex flex-col items-center gap-1 text-gray-400" id="nav-PLAN">
+            <i class="fas fa-calendar-alt text-xl"></i>
+            <span class="text-[10px] font-medium">行程</span>
+        </button>
+        <button onclick="router('GUIDE')" class="nav-item flex flex-col items-center gap-1 text-gray-400" id="nav-GUIDE">
+            <i class="fas fa-map-marked-alt text-xl"></i>
+            <span class="text-[10px] font-medium">導覽</span>
+        </button>
+        <button onclick="router('WALLET')" class="nav-item flex flex-col items-center gap-1 text-gray-400" id="nav-WALLET">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[10px] font-medium">記帳</span>
+        </button>
+        <button onclick="router('LISTS')" class="nav-item flex flex-col items-center gap-1 text-gray-400" id="nav-LISTS">
+            <i class="fas fa-tasks text-xl"></i>
+            <span class="text-[10px] font-medium">清單</span>
+        </button>
+        <button onclick="router('INFO')" class="nav-item flex flex-col items-center gap-1 text-gray-400" id="nav-INFO">
+            <i class="fas fa-info-circle text-xl"></i>
+            <span class="text-[10px] font-medium">資訊</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- Data Definitions ---
+        const tripData = {
+            flights: [
+                { type: '去程', info: '酷航 TR899', time: '16:15 - 20:55', icon: 'fa-plane-departure' },
+                { type: '回程', info: '酷航 TR896', time: '12:30 - 17:05', icon: 'fa-plane-arrival' }
+            ],
+            hotel: {
+                name: 'Furama RiverFront',
+                address: '405 Havelock Rd, Singapore 169633',
+                link: 'https://www.google.com/maps/search/?api=1&query=Furama+RiverFront'
+            },
+            itinerary: [
+                {
+                    day: 1, date: '1/29 (四)', title: '抵達獅城',
+                    events: [
+                        { time: '20:55', desc: '抵達樟宜機場', type: 'transport' },
+                        { time: '22:15', desc: '搭乘地鐵棕線 (TEL) 至 Havelock (TE16)', type: 'transport' },
+                        { time: '23:00', desc: '辦理入住 Furama RiverFront', type: 'hotel' },
+                        { time: '深夜', desc: '羅伯遜碼頭 (Robertson Quay) 採買 (7-Eleven/Cheers)', type: 'food' }
+                    ]
+                },
+                {
+                    day: 2, date: '1/30 (五)', title: '聖淘沙大冒險',
+                    events: [
+                        { time: '08:30', desc: '早餐：中峇魯市場 (推薦：楗柏水粿)', type: 'food', link: 'https://www.google.com/maps/search/?api=1&query=Tiong+Bahru+Market' },
+                        { time: '11:00', desc: '哈利波特：魔法幻象 (預約制)', type: 'spot' },
+                        { time: '13:00', desc: '午餐：聖淘沙馬來西亞美食街', type: 'food' },
+                        { time: '15:00', desc: '斜坡滑車 Skyline Luge (4趟)', type: 'spot' },
+                        { time: '17:00', desc: '聖淘沙賭場 & 巴拉望海灘', type: 'spot' },
+                        { time: '20:00', desc: '回程：港灣站 -> 歐南園 -> Havelock', type: 'transport' }
+                    ]
+                },
+                {
+                    day: 3, date: '1/31 (六)', title: '萬態：飛禽與文化',
+                    events: [
+                        { time: '09:00', desc: '景點：飛禽公園 (Bird Paradise)', type: 'spot', note: '10:30 掠食者表演 | 12:30 世界之翼' },
+                        { time: '13:30', desc: '午餐：園區內餐廳', type: 'food' },
+                        { time: '16:30', desc: '小印度 & 小阿拉伯區', type: 'spot' },
+                        { time: '18:30', desc: '晚餐：Zam Zam 印度煎餅', type: 'food', link: 'https://www.google.com/maps/search/?api=1&query=Singapore+Zam+Zam' }
+                    ]
+                },
+                {
+                    day: 4, date: '2/1 (日)', title: '城市美學與燈光秀',
+                    events: [
+                        { time: '09:00', desc: '早餐：Tiong Bahru Bakery (Fort Canning)', type: 'food' },
+                        { time: '10:00', desc: '新加坡國家博物館', type: 'spot' },
+                        { time: '15:00', desc: '新加坡國家美術館', type: 'spot' },
+                        { time: '17:30', desc: '魚尾獅公園', type: 'spot' },
+                        { time: '19:15', desc: '晚餐：Shake Shack (濱海灣花園店)', type: 'food' },
+                        { time: '19:45', desc: '★ 天空樹燈光秀 (Garden Rhapsody)', type: 'special' },
+                        { time: '21:00', desc: '★ 金沙水舞秀 (Spectra)', type: 'special' }
+                    ]
+                },
+                {
+                    day: 5, date: '2/2 (一)', title: '動物園與夜間探險',
+                    events: [
+                        { time: '08:30', desc: '新加坡動物園 (Singapore Zoo)', type: 'spot', note: '10:30 海洋動物表演' },
+                        { time: '13:00', desc: '午餐：Ah Meng Restaurant', type: 'food' },
+                        { time: '18:00', desc: '晚餐：Ulu Ulu Safari Restaurant', type: 'food' },
+                        { time: '19:15', desc: '夜間野生動物園 (Night Safari)', type: 'spot', note: '19:30 精靈表演 (需預約)' },
+                        { time: '22:00', desc: '搭乘接駁車回 Khatib 轉地鐵回飯店', type: 'transport' }
+                    ]
+                },
+                {
+                    day: 6, date: '2/3 (二)', title: '雨林探險與肉骨茶',
+                    events: [
+                        { time: '09:00', desc: '亞洲雨林探險園 (Rainforest Wild)', type: 'spot' },
+                        { time: '12:30', desc: '午餐：Cavern Restaurant 洞穴餐廳', type: 'food' },
+                        { time: '17:00', desc: '克拉碼頭散步 & 採買伴手禮', type: 'spot' },
+                        { time: '18:30', desc: '晚餐：松發肉骨茶 (總店)', type: 'food', note: '建議18:00前抵達' }
+                    ]
+                },
+                {
+                    day: 7, date: '2/4 (三)', title: '星耀樟宜：完美收尾',
+                    events: [
+                        { time: '08:00', desc: '退房，前往機場', type: 'transport' },
+                        { time: '10:00', desc: '星耀樟宜 (Jewel) 雨漩渦', type: 'spot' },
+                        { time: '11:00', desc: '機場採購 (小CK、班蘭蛋糕、Bacha Coffee)', type: 'food' },
+                        { time: '12:30', desc: '飛機起飛 (TR 896)', type: 'transport' }
+                    ]
+                }
+            ]
+        };
+
+        const guides = [
+            { name: '中峇魯', content: '一個融合傳統與現代的文青社區。中峇魯市場是品嚐道地早餐的最佳地點，周圍的裝飾藝術風格(Art Deco)建築也是一大特色。' },
+            { name: '聖淘沙', content: '原本是軍事基地，現在是世界級度假勝地。入島可搭乘纜車、輕軌或步行步道。', map: 'https://www.openstreetmap.org/export/embed.html?bbox=103.81,1.24,103.83,1.26&layer=mapnik' },
+            { name: '飛禽公園', content: '2023年全新開幕！擁有8個大型走入式鳥舍。必看：Sky Amphitheatre 的表演。' },
+            { name: '新加坡動物園', content: '以「開放式概念」聞名，世界最佳動物園之一。' },
+            { name: '濱海灣花園', content: '必看超級樹(Supertree)與溫室(Cloud Forest)。晚上燈光秀時間為 19:45 與 20:45。' }
+        ];
+
+        // --- State Management ---
+        let currentDay = 1;
+        let expenses = JSON.parse(localStorage.getItem('sg_expenses')) || [];
+        let checklists = JSON.parse(localStorage.getItem('sg_checklist')) || [
+            { id: 1, text: '護照', checked: false },
+            { id: 2, text: '網卡/eSIM', checked: false },
+            { id: 3, text: '雨衣', checked: false },
+            { id: 4, text: '行動電源', checked: false },
+            { id: 5, text: '水壺 (新加坡可直飲)', checked: false }
+        ];
+        let memos = JSON.parse(localStorage.getItem('sg_memos')) || "";
+
+        // --- Core Functions ---
+        function init() {
+            router('PLAN');
+        }
+
+        function router(page) {
+            const app = document.getElementById('app');
+            // Update Navigation UI
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.replace('text-[#70aca7]', 'text-gray-400'));
+            document.getElementById(`nav-${page}`).classList.replace('text-gray-400', 'text-[#70aca7]');
+
+            switch(page) {
+                case 'PLAN': renderPlan(); break;
+                case 'GUIDE': renderGuide(); break;
+                case 'WALLET': renderWallet(); break;
+                case 'LISTS': renderLists(); break;
+                case 'INFO': renderInfo(); break;
+            }
+            window.scrollTo(0,0);
+        }
+
+        // --- View Renders ---
+
+        function renderPlan() {
+            let html = `
+                <div class="mb-6 flex gap-2 overflow-x-auto no-scrollbar py-2">
+                    ${tripData.itinerary.map(d => `
+                        <button onclick="setDay(${d.day})" class="flex-shrink-0 px-4 py-2 rounded-full font-medium ${currentDay === d.day ? 'btn-primary shadow-lg' : 'bg-white text-gray-500'}">
+                            Day ${d.day}
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="glass-card p-6 mb-6">
+                    <h2 class="text-xl font-heavy text-[#70aca7] mb-1">Day ${currentDay}: ${tripData.itinerary[currentDay-1].date}</h2>
+                    <p class="text-gray-500 text-sm mb-4">${tripData.itinerary[currentDay-1].title}</p>
+                    
+                    <div class="timeline-line">
+                        ${tripData.itinerary[currentDay-1].events.map(ev => `
+                            <div class="mb-6 relative">
+                                <div class="timeline-dot"></div>
+                                <span class="text-xs font-bold ${ev.type === 'special' ? 'text-[#f0603c]' : 'text-gray-400'}">${ev.time}</span>
+                                <p class="text-[15px] font-medium leading-tight">${ev.desc}</p>
+                                ${ev.note ? `<p class="text-xs text-gray-400 mt-1 italic">${ev.note}</p>` : ''}
+                                ${ev.link ? `<a href="${ev.link}" target="_blank" class="inline-block mt-2 text-xs text-[#70aca7]"><i class="fas fa-map-marker-alt"></i> 開啟地圖</a>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="glass-card p-4 mb-4 flex items-center gap-4">
+                    <div class="bg-blue-50 p-3 rounded-xl text-blue-500"><i class="fas fa-hotel text-xl"></i></div>
+                    <div>
+                        <p class="text-xs text-gray-400">住宿資訊</p>
+                        <p class="font-bold text-sm">${tripData.hotel.name}</p>
+                        <p class="text-[10px] text-gray-500">${tripData.hotel.address}</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function setDay(d) {
+            currentDay = d;
+            renderPlan();
+        }
+
+        function renderGuide() {
+            let html = `
+                <h2 class="text-xl font-heavy mb-4">景點導覽</h2>
+                ${guides.map(g => `
+                    <details class="glass-card mb-4 overflow-hidden group">
+                        <summary class="p-4 font-bold flex justify-between items-center list-none cursor-pointer">
+                            ${g.name}
+                            <i class="fas fa-chevron-down text-xs transition-transform group-open:rotate-180"></i>
+                        </summary>
+                        <div class="px-4 pb-4 text-sm text-gray-600 leading-relaxed">
+                            <p class="mb-4">${g.content}</p>
+                            ${g.map ? `<iframe width="100%" height="200" src="${g.map}" class="rounded-lg border-0"></iframe>` : ''}
+                        </div>
+                    </details>
+                `).join('')}
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function renderWallet() {
+            const totalSGD = expenses.reduce((sum, exp) => sum + parseFloat(exp.amt), 0);
+            const rate = 24.5; // Example Rate
+
+            let html = `
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="glass-card p-4 text-center">
+                        <p class="text-[10px] text-gray-400 uppercase">總支出 (SGD)</p>
+                        <p class="text-2xl font-heavy text-[#70aca7]">$${totalSGD.toFixed(1)}</p>
+                    </div>
+                    <div class="glass-card p-4 text-center">
+                        <p class="text-[10px] text-gray-400 uppercase">約合 (TWD)</p>
+                        <p class="text-2xl font-heavy text-[#f0603c]">~${Math.round(totalSGD * rate)}</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 mb-6">
+                    <h3 class="font-heavy mb-3 text-sm">新增支出</h3>
+                    <div class="flex flex-col gap-3">
+                        <input id="exp-item" type="text" placeholder="品項 (如: 晚餐)" class="bg-gray-50 border-0 rounded-xl p-3 text-sm focus:ring-2 ring-[#70aca7] outline-none">
+                        <div class="flex gap-2">
+                            <input id="exp-amt" type="number" placeholder="金額 (SGD)" class="flex-1 bg-gray-50 border-0 rounded-xl p-3 text-sm focus:ring-2 ring-[#70aca7] outline-none">
+                            <label class="bg-gray-100 p-3 rounded-xl cursor-pointer">
+                                <i class="fas fa-camera text-gray-500"></i>
+                                <input type="file" id="exp-img" accept="image/*" class="hidden" onchange="handleImage(this)">
+                            </label>
+                        </div>
+                        <div id="img-preview" class="hidden relative w-16 h-16 rounded-lg overflow-hidden border"></div>
+                        <button onclick="addExpense()" class="btn-primary p-3 rounded-xl font-bold">記錄</button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="font-heavy text-sm ml-1">最近紀錄</h3>
+                    ${expenses.slice().reverse().map((exp, idx) => `
+                        <div class="glass-card p-3 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                ${exp.img ? `<img src="${exp.img}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400"><i class="fas fa-receipt"></i></div>`}
+                                <div>
+                                    <p class="font-bold text-sm">${exp.item}</p>
+                                    <p class="text-[10px] text-gray-400">${exp.date}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-[#70aca7] text-sm">$${exp.amt}</p>
+                                <button onclick="deleteExpense(${expenses.length - 1 - idx})" class="text-[10px] text-red-300">刪除</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        let tempImg = null;
+        function handleImage(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    // Resize for LocalStorage efficiency
+                    const scale = 300 / img.width;
+                    canvas.width = 300;
+                    canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    tempImg = canvas.toDataURL('image/jpeg', 0.6);
+                    document.getElementById('img-preview').innerHTML = `<img src="${tempImg}" class="w-full h-full object-cover">`;
+                    document.getElementById('img-preview').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addExpense() {
+            const item = document.getElementById('exp-item').value;
+            const amt = document.getElementById('exp-amt').value;
+            if(!item || !amt) return;
+
+            const newExp = {
+                item, amt, img: tempImg, 
+                date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+            expenses.push(newExp);
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            tempImg = null;
+            renderWallet();
+        }
+
+        function deleteExpense(idx) {
+            expenses.splice(idx, 1);
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            renderWallet();
+        }
+
+        function renderLists() {
+            let html = `
+                <div class="glass-card p-6 mb-6">
+                    <h3 class="font-heavy mb-4 flex items-center gap-2"><i class="fas fa-check-square text-[#70aca7]"></i> 行前必備</h3>
+                    <div class="space-y-3">
+                        ${checklists.map((item, idx) => `
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="check-${idx}" ${item.checked ? 'checked' : ''} onchange="toggleCheck(${idx})" class="w-5 h-5 accent-[#70aca7]">
+                                <label for="check-${idx}" class="text-sm ${item.checked ? 'line-through text-gray-400' : ''}">${item.text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h3 class="font-heavy mb-3 flex items-center gap-2"><i class="fas fa-sticky-note text-[#ffca05]"></i> 個人備忘錄</h3>
+                    <textarea id="memo-area" oninput="saveMemo(this.value)" class="w-full h-40 bg-transparent border-0 focus:ring-0 text-sm leading-relaxed" placeholder="在這裡輸入筆記、訂單編號或網址...">${memos}</textarea>
+                    <div id="memo-links" class="mt-2 flex flex-wrap gap-2"></div>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+            updateMemoLinks();
+        }
+
+        function toggleCheck(idx) {
+            checklists[idx].checked = !checklists[idx].checked;
+            localStorage.setItem('sg_checklist', JSON.stringify(checklists));
+            renderLists();
+        }
+
+        function saveMemo(val) {
+            memos = val;
+            localStorage.setItem('sg_memos', memos);
+            updateMemoLinks();
+        }
+
+        function updateMemoLinks() {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const links = memos.match(urlRegex) || [];
+            const container = document.getElementById('memo-links');
+            if(container) {
+                container.innerHTML = links.map(link => `
+                    <a href="${link}" target="_blank" class="px-3 py-1 bg-[#daefeb] text-[#70aca7] rounded-full text-[10px] font-bold truncate max-w-[150px]">
+                        <i class="fas fa-link"></i> 開啟連結
+                    </a>
+                `).join('');
+            }
+        }
+
+        function renderInfo() {
+            let html = `
+                <div class="space-y-4">
+                    <div class="glass-card p-4 bg-[#f0603c] text-white">
+                        <h3 class="font-heavy mb-2"><i class="fas fa-exclamation-triangle"></i> 緊急聯絡</h3>
+                        <p class="text-xs">警察: 999 | 救護車: 995</p>
+                        <p class="text-xs mt-1">辦事處: +65 6737 3061</p>
+                    </div>
+
+                    <div class="glass-card p-5">
+                        <h3 class="font-heavy text-[#70aca7] mb-3">💡 旅遊小提醒</h3>
+                        <ul class="text-xs text-gray-600 space-y-3">
+                            <li class="flex gap-2"><span>•</span> <span>公車不報站，請盯著 Google Maps 定位並提前按鈴。</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>萬態接駁車在 Khatib 站 A 出口，班次非常準時。</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>水龍頭水可直飲，省下飲料費買肉骨茶！</span></li>
+                            <li class="flex gap-2"><span>•</span> <span>24小時補給可找 Great World 內的超市。</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card p-5">
+                        <h3 class="font-heavy text-[#f0603c] mb-3">☔ 雨天備案</h3>
+                        <p class="text-xs font-bold mb-2">若在聖淘沙遇雨：</p>
+                        <p class="text-xs text-gray-500 mb-3">改往 S.E.A. 海洋館 (全室內)。</p>
+                        <p class="text-xs font-bold mb-2">若在市區遇雨：</p>
+                        <p class="text-xs text-gray-500">前往 Funan Digital Mall 觀察智慧零售。</p>
+                    </div>
+                    
+                    <a href="https://www.weather.gov.sg/home/" target="_blank" class="block glass-card p-4 text-center font-bold text-gray-500">
+                        <i class="fas fa-cloud-sun"></i> 查看當地即時天氣
+                    </a>
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        // Initialize App
+        init();
+    </script>
+</body>
+</html>
