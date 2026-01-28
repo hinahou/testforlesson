@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026 獅城漫遊 | Singapore Trip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=League+Spartan:wght@700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: '#70aca7',
+                        lightCyan: '#daefeb',
+                        brightYellow: '#ffca05',
+                        orangeRed: '#f0603c',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        title: ['League Spartan', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { -webkit-tap-highlight-color: transparent; background-color: #f8fafc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .timeline-line::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: #daefeb; }
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body class="font-sans text-gray-800 pb-24">
+
+    <header class="bg-mint p-6 rounded-b-[40px] shadow-lg text-white relative overflow-hidden">
+        <div class="relative z-10">
+            <h1 class="font-title text-3xl tracking-tight">SINGAPORE 2026</h1>
+            <p class="text-lightCyan text-sm font-light opacity-90">1/29 - 2/4 · 3位成人探索之旅</p>
+        </div>
+        <i class="fas fa-plane-departure absolute -right-4 -bottom-4 text-white/10 text-9xl"></i>
+    </header>
+
+    <main class="px-4 mt-6">
+        
+        <section id="plan" class="tab-content active">
+            <div class="flex gap-3 mb-6 overflow-x-auto pb-2">
+                <div class="glass-card p-4 rounded-2xl flex-shrink-0 w-64 shadow-sm border-l-4 border-brightYellow">
+                    <p class="text-xs text-gray-400 uppercase font-bold tracking-widest">Flight Details</p>
+                    <p class="text-sm font-semibold mt-1">去: TR899 16:15-20:55</p>
+                    <p class="text-sm font-semibold">回: TR896 12:30-17:05</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl flex-shrink-0 w-64 shadow-sm border-l-4 border-mint">
+                    <p class="text-xs text-gray-400 uppercase font-bold tracking-widest">Hotel</p>
+                    <p class="text-sm font-semibold mt-1">Furama RiverFront</p>
+                    <button onclick="window.open('https://maps.app.goo.gl/3q2e5xR8qRj8D8pD9')" class="text-xs text-mint underline mt-1">開啟 Google Maps</button>
+                </div>
+            </div>
+
+            <div id="itinerary-list" class="space-y-8 relative timeline-line">
+                </div>
+        </section>
+
+        <section id="guide" class="tab-content">
+            <h2 class="font-title text-2xl text-mint mb-4">Discovery Guide</h2>
+            <div class="space-y-6">
+                <article class="bg-white p-5 rounded-3xl shadow-sm">
+                    <div class="w-full h-40 bg-lightCyan rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
+                         <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=103.856%2C1.285%2C103.864%2C1.291&layer=mapnik" class="w-full h-full border-none"></iframe>
+                    </div>
+                    <h3 class="font-bold text-lg text-orangeRed">魚尾獅公園 Merlion Park</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mt-2">
+                        魚尾獅是新加坡的標誌。獅頭代表傳說中的「獅城」，魚尾象徵新加坡從漁村起家的背景。建議傍晚前往，可同時拍攝金沙酒店與夜景。
+                    </p>
+                </article>
+
+                <article class="bg-white p-5 rounded-3xl shadow-sm">
+                    <h3 class="font-bold text-lg text-mint">萬態園區攻略 (Mandai)</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mt-2 italic">
+                        冷知識：新加坡動物園以「開放式園區」聞名，利用天然屏障取代鐵籠。
+                    </p>
+                    <ul class="text-sm mt-3 space-y-1 text-gray-500">
+                        <li>• 飛禽公園：亞洲最大的飛禽展示區。</li>
+                        <li>• 夜間動物園：全球首座專為夜間動物設立的園區。</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section id="wallet" class="tab-content">
+            <div class="bg-mint p-6 rounded-3xl text-white shadow-lg mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm opacity-80 font-light">SGD 匯率計算機 (預設 24)</span>
+                    <input id="fx-rate" type="number" value="24" class="w-16 bg-white/20 rounded text-center text-sm outline-none">
+                </div>
+                <div class="relative">
+                    <input id="calc-input" type="text" placeholder="輸入算式 (例如 15+20*3)" class="w-full bg-white/10 p-4 rounded-2xl text-2xl font-title placeholder:text-white/30 outline-none">
+                    <button onclick="calculateFx()" class="absolute right-2 top-2 bottom-2 bg-brightYellow text-gray-800 px-6 rounded-xl font-bold">＝</button>
+                </div>
+                <div id="calc-result" class="mt-4 text-right">
+                    <p class="text-sm opacity-80">換算台幣</p>
+                    <p class="text-3xl font-title text-brightYellow">TWD 0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 shadow-sm">
+                <h3 class="font-title text-xl text-mint mb-4">Expense Tracker</h3>
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <input id="exp-name" type="text" placeholder="品項" class="bg-gray-100 p-3 rounded-xl text-sm outline-none">
+                    <input id="exp-amount" type="number" placeholder="SGD 金額" class="bg-gray-100 p-3 rounded-xl text-sm outline-none">
+                </div>
+                <div class="flex gap-3 mb-6">
+                    <label class="flex-1 bg-lightCyan text-mint py-3 rounded-xl text-center text-sm font-bold cursor-pointer">
+                        <i class="fas fa-camera mr-2"></i>拍照記錄
+                        <input type="file" accept="image/*" capture="environment" id="exp-img" class="hidden" onchange="handleImage(this)">
+                    </label>
+                    <button onclick="addExpense()" class="flex-1 bg-orangeRed text-white py-3 rounded-xl text-sm font-bold shadow-md shadow-orangeRed/20">新增紀錄</button>
+                </div>
+                <div id="expense-list" class="space-y-4">
+                    </div>
+            </div>
+        </section>
+
+        <section id="lists" class="tab-content">
+            <div class="bg-white p-6 rounded-3xl shadow-sm mb-6">
+                <h3 class="font-title text-xl text-mint mb-4">行前 CheckList</h3>
+                <div id="checklist" class="space-y-3">
+                    </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm">
+                <h3 class="font-title text-xl text-orangeRed mb-4">個人備忘錄</h3>
+                <textarea id="note-input" rows="4" placeholder="輸入連結或筆記..." class="w-full bg-gray-50 p-4 rounded-2xl text-sm outline-none border-none mb-3"></textarea>
+                <button onclick="saveNote()" class="w-full bg-mint text-white py-3 rounded-xl font-bold">儲存筆記</button>
+                <div id="note-display" class="mt-4 space-y-2"></div>
+            </div>
+        </section>
+
+        <section id="info" class="tab-content">
+            <h2 class="font-title text-2xl text-mint mb-4">Travel Info</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="window.open('https://www.weather.gov.sg/home/')" class="bg-white p-5 rounded-3xl shadow-sm text-center cursor-pointer">
+                    <i class="fas fa-cloud-sun text-brightYellow text-3xl mb-2"></i>
+                    <p class="text-sm font-bold">新加坡氣象局</p>
+                </div>
+                <div class="bg-white p-5 rounded-3xl shadow-sm text-center">
+                    <i class="fas fa-phone-alt text-orangeRed text-3xl mb-2"></i>
+                    <p class="text-sm font-bold">報警 999 / 救護 995</p>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-3xl shadow-sm mt-4">
+                <h3 class="font-bold mb-3 text-mint"><i class="fas fa-exclamation-triangle mr-2"></i>注意事項</h3>
+                <ul class="text-sm text-gray-600 space-y-3">
+                    <li class="flex items-start"><i class="fas fa-check-circle text-mint mt-1 mr-2"></i> 捷運與公車：使用 SimplyGo 感應信用卡。</li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-mint mt-1 mr-2"></i> 飲水：水龍頭水可生飲，建議帶空水壺。</li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-mint mt-1 mr-2"></i> 禁忌：禁止口香糖入境，地鐵內禁止飲食。</li>
+                    <li class="flex items-start"><i class="fas fa-check-circle text-mint mt-1 mr-2"></i> 退稅：單店滿 $100 即可申請 eTRS。</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-around items-center py-3 px-2 z-50">
+        <button onclick="showTab('plan')" class="nav-btn flex flex-col items-center text-mint active" data-tab="plan">
+            <i class="fas fa-calendar-day text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">PLAN</span>
+        </button>
+        <button onclick="showTab('guide')" class="nav-btn flex flex-col items-center text-gray-400" data-tab="guide">
+            <i class="fas fa-map-marked-alt text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">GUIDE</span>
+        </button>
+        <button onclick="showTab('wallet')" class="nav-btn flex flex-col items-center text-gray-400" data-tab="wallet">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">WALLET</span>
+        </button>
+        <button onclick="showTab('lists')" class="nav-btn flex flex-col items-center text-gray-400" data-tab="lists">
+            <i class="fas fa-tasks text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">LISTS</span>
+        </button>
+        <button onclick="showTab('info')" class="nav-btn flex flex-col items-center text-gray-400" data-tab="info">
+            <i class="fas fa-info-circle text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- 行程資料 ---
+        const itineraryData = [
+            { date: "1/29 (四)", title: "抵達獅城：深夜安置", items: [
+                { time: "20:55", task: "抵達樟宜機場", desc: "前往 Havelock 站 (TEL 線)" },
+                { time: "23:00", task: "辦理入住 Furama RiverFront", important: true },
+                { time: "深夜", task: "羅伯遜碼頭採買", desc: "7-Eleven 或 Great World 超市" }
+            ]},
+            { date: "1/30 (五)", title: "聖淘沙：魔法與冒險", items: [
+                { time: "08:30", task: "中峇魯市場早餐", desc: "推薦：楗柏水粿、滷麵" },
+                { time: "11:00", task: "哈利波特：魔法幻象", important: true },
+                { time: "15:00", task: "斜坡滑車 (Skyline Luge)", desc: "玩 4 趟" },
+                { time: "19:00", task: "VivoCity 晚餐", desc: "Food Republic 大食代" }
+            ]},
+            { date: "1/31 (六)", title: "城市經典：美學與燈光秀", items: [
+                { time: "10:00", task: "國家博物館", desc: "停留 2.5 小時" },
+                { time: "15:00", task: "國家美術館", desc: "停留 2 小時" },
+                { time: "19:45", task: "天空樹燈光秀", desc: "Supertree Grove", important: true },
+                { time: "21:00", task: "金沙酒店水舞秀", desc: "Event Plaza" }
+            ]},
+            { date: "2/1 (日)", title: "萬態園區：飛禽與文化", items: [
+                { time: "09:00", task: "飛禽公園 (Bird Paradise)", important: true },
+                { time: "16:30", task: "小印度 & 小阿拉伯", desc: "異國文化探索" },
+                { time: "18:30", task: "Zam Zam 晚餐", desc: "必吃印度煎餅" }
+            ]},
+            { date: "2/2 (一)", title: "萬態園區：經典動物園", items: [
+                { time: "08:30", task: "新加坡動物園", desc: "海洋動物表演 10:30" },
+                { time: "18:00", task: "烏魯烏魯餐廳晚餐", desc: "南洋料理自助餐" },
+                { time: "19:15", task: "夜間野生動物園", important: true }
+            ]},
+            { date: "2/3 (二)", title: "雨林探險與克拉碼頭", items: [
+                { time: "09:00", task: "亞洲雨林探險園", important: true },
+                { time: "12:30", task: "Cavern Restaurant", desc: "沉浸式岩層用餐" },
+                { time: "18:30", task: "松發肉骨茶", desc: "克拉碼頭總店" }
+            ]},
+            { date: "2/4 (三)", title: "星耀樟宜：完美收尾", items: [
+                { time: "10:00", task: "Jewel 星耀樟宜", desc: "雨漩渦 (Rain Vortex)" },
+                { time: "11:00", task: "機場免稅店最後採購", desc: "小CK、斑蘭蛋糕、IRVINS" },
+                { time: "12:30", task: "飛機起飛 TR 896", important: true }
+            ]}
+        ];
+
+        // --- 初始化頁面 ---
+        window.onload = () => {
+            renderPlan();
+            renderChecklist();
+            renderExpenses();
+            renderNotes();
+        };
+
+        // --- 核心導航功能 ---
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-mint', 'active');
+                btn.classList.add('text-gray-400');
+                if(btn.dataset.tab === tabId) {
+                    btn.classList.add('text-mint', 'active');
+                    btn.classList.remove('text-gray-400');
+                }
+            });
+            window.scrollTo(0,0);
+        }
+
+        // --- 渲染行程 ---
+        function renderPlan() {
+            const container = document.getElementById('itinerary-list');
+            container.innerHTML = itineraryData.map((day, idx) => `
+                <div class="relative pl-10">
+                    <div class="absolute left-0 top-1 w-8 h-8 bg-white border-4 border-mint rounded-full z-10 flex items-center justify-center">
+                        <span class="text-[10px] font-bold text-mint">${idx+1}</span>
+                    </div>
+                    <h3 class="font-title text-xl text-mint leading-none">${day.date}</h3>
+                    <p class="text-sm font-bold text-gray-500 mt-1 mb-4">${day.title}</p>
+                    <div class="space-y-4">
+                        ${day.items.map(item => `
+                            <div class="glass-card p-4 rounded-2xl shadow-sm border-l-4 ${item.important ? 'border-orangeRed' : 'border-lightCyan'}">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-xs font-bold ${item.important ? 'text-orangeRed' : 'text-mint'} bg-lightCyan/50 px-2 py-1 rounded">${item.time}</span>
+                                </div>
+                                <p class="text-sm font-bold mt-2">${item.task}</p>
+                                ${item.desc ? `<p class="text-xs text-gray-500 mt-1">${item.desc}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 匯率計算機 ---
+        function calculateFx() {
+            const input = document.getElementById('calc-input').value;
+            const rate = document.getElementById('fx-rate').value || 24;
+            try {
+                // 使用安全的方式計算字串
+                const result = eval(input.replace(/[^-()\d/*+.]/g, ''));
+                const twd = (result * rate).toLocaleString();
+                document.getElementById('calc-result').innerHTML = `
+                    <p class="text-sm opacity-80">換算台幣 (x${rate})</p>
+                    <p class="text-3xl font-title text-brightYellow">TWD ${twd}</p>
+                `;
+            } catch (e) {
+                alert("輸入格式有誤");
+            }
+        }
+
+        // --- 記帳功能 (含圖片壓縮儲存) ---
+        let currentImgBase64 = "";
+
+        function handleImage(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxW = 200; // 壓縮縮圖
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    currentImgBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amount = document.getElementById('exp-amount').value;
+            if(!name || !amount) return;
+
+            const expenses = JSON.parse(localStorage.getItem('sg_expenses') || '[]');
+            expenses.unshift({ name, amount, img: currentImgBase64, id: Date.now() });
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            
+            document.getElementById('exp-name').value = "";
+            document.getElementById('exp-amount').value = "";
+            currentImgBase64 = "";
+            renderExpenses();
+        }
+
+        function renderExpenses() {
+            const expenses = JSON.parse(localStorage.getItem('sg_expenses') || '[]');
+            const list = document.getElementById('expense-list');
+            list.innerHTML = expenses.map(item => `
+                <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-2xl">
+                    ${item.img ? `<img src="${item.img}" class="w-12 h-12 rounded-lg object-cover">` : `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-400">無圖</div>`}
+                    <div class="flex-1">
+                        <p class="text-sm font-bold">${item.name}</p>
+                        <p class="text-xs text-gray-500">SGD ${item.amount} (≈ TWD ${item.amount * 24})</p>
+                    </div>
+                    <button onclick="deleteExpense(${item.id})" class="text-gray-300 hover:text-orangeRed px-2"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteExpense(id) {
+            let expenses = JSON.parse(localStorage.getItem('sg_expenses') || '[]');
+            expenses = expenses.filter(i => i.id !== id);
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            renderExpenses();
+        }
+
+        // --- 清單功能 ---
+        const checkItems = ["護照", "SIM卡/網卡", "雨衣/摺疊傘", "行動電源", "充電器", "小外套 (冷氣強)", "防蚊液"];
+        function renderChecklist() {
+            const states = JSON.parse(localStorage.getItem('sg_checklist') || '{}');
+            const container = document.getElementById('checklist');
+            container.innerHTML = checkItems.map(item => `
+                <label class="flex items-center gap-3 bg-gray-50 p-4 rounded-2xl cursor-pointer">
+                    <input type="checkbox" onchange="toggleCheck('${item}')" ${states[item] ? 'checked' : ''} class="w-5 h-5 accent-mint">
+                    <span class="text-sm ${states[item] ? 'line-through text-gray-400' : 'font-semibold'}">${item}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleCheck(item) {
+            const states = JSON.parse(localStorage.getItem('sg_checklist') || '{}');
+            states[item] = !states[item];
+            localStorage.setItem('sg_checklist', JSON.stringify(states));
+            renderChecklist();
+        }
+
+        // --- 備忘錄與自動連結 ---
+        function saveNote() {
+            const text = document.getElementById('note-input').value;
+            if(!text) return;
+            const notes = JSON.parse(localStorage.getItem('sg_notes') || '[]');
+            notes.unshift({ text, id: Date.now() });
+            localStorage.setItem('sg_notes', JSON.stringify(notes));
+            document.getElementById('note-input').value = "";
+            renderNotes();
+        }
+
+        function renderNotes() {
+            const notes = JSON.parse(localStorage.getItem('sg_notes') || '[]');
+            const display = document.getElementById('note-display');
+            display.innerHTML = notes.map(note => {
+                const linkedText = note.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="inline-block bg-mint text-white px-3 py-1 rounded-lg text-[10px] mt-2"><i class="fas fa-external-link-alt mr-1"></i>開啟連結</a>');
+                return `
+                    <div class="bg-lightCyan/30 p-4 rounded-2xl relative group">
+                        <p class="text-sm text-gray-700 whitespace-pre-wrap">${linkedText}</p>
+                        <button onclick="deleteNote(${note.id})" class="absolute top-2 right-2 text-gray-300 hover:text-orangeRed text-xs"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteNote(id) {
+            let notes = JSON.parse(localStorage.getItem('sg_notes') || '[]');
+            notes = notes.filter(n => n.id !== id);
+            localStorage.setItem('sg_notes', JSON.stringify(notes));
+            renderNotes();
+        }
+    </script>
+</body>
+</html>
