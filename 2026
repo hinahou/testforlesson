@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SG Travel 2026 - Master Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mint: '#70aca7',
+                        lightCyan: '#daefeb',
+                        brightYellow: '#ffca05',
+                        orangeRed: '#f0603c',
+                        softBg: '#f8fbfa'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fbfa; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-card { background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(112, 172, 167, 0.08); transition: transform 0.2s; }
+        .glass-card:active { transform: scale(0.98); }
+        .transport-card { background: #f0f9f8; border-left: 4px solid #70aca7; border-radius: 16px; }
+        .time-badge { background: #70aca7; color: white; padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 5px rgba(112, 172, 167, 0.3); }
+        .nav-active { color: #70aca7 !important; transform: translateY(-3px); }
+        .nav-active i { color: #70aca7; }
+    </style>
+</head>
+<body class="pb-28">
+
+    <header class="p-6 bg-white sticky top-0 z-50 flex justify-between items-center shadow-sm rounded-b-[30px]">
+        <div>
+            <h1 class="text-2xl font-black text-mint tracking-tight">SG ADVENTURE</h1>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Singapore 2026</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="https://www.weather.gov.sg/home/" target="_blank" class="w-10 h-10 flex items-center justify-center bg-lightCyan text-mint rounded-full"><i class="fas fa-cloud-sun text-lg"></i></a>
+        </div>
+    </header>
+
+    <main id="app" class="px-5 pt-6">
+        </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md h-22 flex items-center justify-around px-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] rounded-t-[35px] z-50 border-t border-gray-100 pb-2">
+        <button onclick="router('PLAN')" class="nav-item p-3 flex flex-col items-center gap-1 text-gray-300 transition-all" id="nav-PLAN">
+            <i class="fas fa-calendar-day text-xl"></i>
+            <span class="text-[10px] font-black uppercase tracking-wider">PLAN</span>
+        </button>
+        <button onclick="router('GUIDE')" class="nav-item p-3 flex flex-col items-center gap-1 text-gray-300 transition-all" id="nav-GUIDE">
+            <i class="fas fa-book-open text-xl"></i>
+            <span class="text-[10px] font-black uppercase tracking-wider">GUIDE</span>
+        </button>
+        <button onclick="router('WALLET')" class="nav-item p-3 flex flex-col items-center gap-1 text-gray-300 transition-all" id="nav-WALLET">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[10px] font-black uppercase tracking-wider">WALLET</span>
+        </button>
+        <button onclick="router('LISTS')" class="nav-item p-3 flex flex-col items-center gap-1 text-gray-300 transition-all" id="nav-LISTS">
+            <i class="fas fa-tasks text-xl"></i>
+            <span class="text-[10px] font-black uppercase tracking-wider">LISTS</span>
+        </button>
+        <button onclick="router('INFO')" class="nav-item p-3 flex flex-col items-center gap-1 text-gray-300 transition-all" id="nav-INFO">
+            <i class="fas fa-info-circle text-xl"></i>
+            <span class="text-[10px] font-black uppercase tracking-wider">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // 行程資料與 Google Maps 連結
+        const tripData = {
+            itinerary: [
+                {
+                    day: 1, date: '1/29 (四)', title: '抵達獅城：深夜安置',
+                    events: [
+                        { time: '20:55', type: 'spot', title: '抵達樟宜機場', desc: '辦理入境與行李提領', map: 'https://www.google.com/maps/search/?api=1&query=Changi+Airport' },
+                        { time: '22:15', type: 'transport', title: '搭乘 TEL 棕線', desc: 'Changi Airport -> Havelock (TE16)', map: 'https://www.google.com/maps/search/?api=1&query=Havelock+MRT+Station' },
+                        { time: '23:00', type: 'spot', title: '入住 Furama RiverFront', desc: '405 Havelock Rd', map: 'https://www.google.com/maps/search/?api=1&query=Furama+RiverFront' },
+                        { time: '深夜', type: 'food', title: '羅伯遜碼頭 24H 補給', desc: '7-Eleven 或 Cheers', map: 'https://www.google.com/maps/search/?api=1&query=Robertson+Quay+7-Eleven' }
+                    ]
+                },
+                {
+                    day: 2, date: '1/30 (五)', title: '聖淘沙：魔法與冒險',
+                    events: [
+                        { time: '08:30', type: 'food', title: '中峇魯市場早餐', desc: '楗柏水粿、中峇魯滷麵', map: 'https://www.google.com/maps/search/?api=1&query=Tiong+Bahru+Market' },
+                        { time: '11:00', type: 'spot', title: '哈利波特：魔法幻象', desc: '預約制場次', map: 'https://www.google.com/maps/search/?api=1&query=Harry+Potter+Visions+Sentosa' },
+                        { time: '13:00', type: 'food', title: '馬來西亞美食街', desc: '推薦：禤記瓦煲雞飯', map: 'https://www.google.com/maps/search/?api=1&query=Malaysian+Food+Street+Sentosa' },
+                        { time: '15:00', type: 'spot', title: '斜坡滑車 Skyline Luge', desc: '連玩 4 趟', map: 'https://www.google.com/maps/search/?api=1&query=Skyline+Luge+Sentosa' },
+                        { time: '17:00', type: 'spot', title: '巴拉望海灘 & 賭場', desc: '散步與休憩', map: 'https://www.google.com/maps/search/?api=1&query=Palawan+Beach' },
+                        { time: '19:00', type: 'food', title: 'Food Republic 晚餐', desc: 'VivoCity 內的美味閣', map: 'https://www.google.com/maps/search/?api=1&query=Food+Republic+VivoCity' }
+                    ]
+                },
+                {
+                    day: 3, date: '1/31 (六)', title: '萬態園區：飛禽世界',
+                    events: [
+                        { time: '09:00', type: 'spot', title: '飛禽公園 Bird Paradise', desc: '10:30 掠食者 / 12:30 世界之翼', map: 'https://www.google.com/maps/search/?api=1&query=Bird+Paradise+Mandai' },
+                        { time: '16:30', type: 'spot', title: '小印度 & 小阿拉伯區', desc: '異國文化體驗', map: 'https://www.google.com/maps/search/?api=1&query=Little+India+Singapore' },
+                        { time: '18:30', type: 'food', title: 'Zam Zam 印度煎餅', desc: '百年名店', map: 'https://www.google.com/maps/search/?api=1&query=Singapore+Zam+Zam' }
+                    ]
+                },
+                {
+                    day: 4, date: '2/1 (日)', title: '城市經典：美學巡禮',
+                    events: [
+                        { time: '09:00', type: 'food', title: 'Tiong Bahru Bakery', desc: '山腳下的文青咖啡店', map: 'https://www.google.com/maps/search/?api=1&query=Tiong+Bahru+Bakery+Fort+Canning' },
+                        { time: '10:00', type: 'spot', title: '新加坡國家博物館', desc: '深度文化之旅', map: 'https://www.google.com/maps/search/?api=1&query=National+Museum+of+Singapore' },
+                        { time: '15:00', type: 'spot', title: '新加坡國家美術館', desc: '前政府大廈改建', map: 'https://www.google.com/maps/search/?api=1&query=National+Gallery+Singapore' },
+                        { time: '17:30', type: 'spot', title: '魚尾獅公園', desc: '經典必拍地標', map: 'https://www.google.com/maps/search/?api=1&query=Merlion+Park' },
+                        { time: '19:45', type: 'spot', title: '★ 天空樹燈光秀', desc: '濱海灣花園燈光饗宴', map: 'https://www.google.com/maps/search/?api=1&query=Supertree+Grove' },
+                        { time: '21:00', type: 'spot', title: '★ 金沙酒店水舞秀', desc: '活動廣場前觀賞', map: 'https://www.google.com/maps/search/?api=1&query=Event+Plaza+Marina+Bay+Sands' }
+                    ]
+                },
+                {
+                    day: 5, date: '2/2 (一)', title: '萬態園區：夜間探險',
+                    events: [
+                        { time: '08:30', type: 'spot', title: '新加坡動物園', desc: '10:30 海洋表演', map: 'https://www.google.com/maps/search/?api=1&query=Singapore+Zoo' },
+                        { time: '13:00', type: 'food', title: 'Ah Meng Restaurant', desc: '園區內道地午餐', map: 'https://www.google.com/maps/search/?api=1&query=Ah+Meng+Restaurant+Zoo' },
+                        { time: '18:00', type: 'food', title: 'Ulu Ulu 餐廳', desc: '南洋料理自助餐', map: 'https://www.google.com/maps/search/?api=1&query=Ulu+Ulu+Safari+Restaurant' },
+                        { time: '19:15', type: 'spot', title: '夜間野生動物園', desc: '精靈表演與遊園車', map: 'https://www.google.com/maps/search/?api=1&query=Night+Safari+Singapore' }
+                    ]
+                },
+                {
+                    day: 6, date: '2/3 (二)', title: '萬態：亞洲雨林探險',
+                    events: [
+                        { time: '09:00', type: 'spot', title: '亞洲雨林探險園', desc: 'Rainforest Wild Asia', map: 'https://www.google.com/maps/search/?api=1&query=Rainforest+Wild+Asia' },
+                        { time: '12:30', type: 'food', title: 'Cavern 洞穴餐廳', desc: '岩層沉浸式用餐', map: 'https://www.google.com/maps/search/?api=1&query=Cavern+Restaurant+Mandai' },
+                        { time: '18:30', type: 'food', title: '松發肉骨茶', desc: '克拉碼頭總店', map: 'https://www.google.com/maps/search/?api=1&query=Song+Fa+Bak+Kut+Teh+New+Bridge+Road' }
+                    ]
+                },
+                {
+                    day: 7, date: '2/4 (三)', title: '星耀樟宜：完美收尾',
+                    events: [
+                        { time: '10:00', type: 'spot', title: '星耀樟宜 雨漩渦', desc: '全球最高室內瀑布', map: 'https://www.google.com/maps/search/?api=1&query=Jewel+Changi+Airport' },
+                        { time: '11:00', type: 'spot', title: '最後採購 (小CK/斑蘭)', desc: '免稅店與超市掃貨', map: 'https://www.google.com/maps/search/?api=1&query=FairPrice+Finest+Jewel+Changi' },
+                        { time: '12:30', type: 'transport', title: '登機起飛', desc: '搭乘 TR 896', map: 'https://www.google.com/maps/search/?api=1&query=Changi+Airport+T1' }
+                    ]
+                }
+            ]
+        };
+
+        let currentDay = 1;
+        let expenses = JSON.parse(localStorage.getItem('sg_expenses_2026')) || [];
+
+        function router(page) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('nav-active'));
+            document.getElementById(`nav-${page}`).classList.add('nav-active');
+            
+            const app = document.getElementById('app');
+            if (page === 'PLAN') renderPlan();
+            else if (page === 'WALLET') renderWallet();
+            else if (page === 'LISTS') renderLists();
+            else if (page === 'INFO') renderInfo();
+            else if (page === 'GUIDE') renderGuide();
+            window.scrollTo(0,0);
+        }
+
+        function renderPlan() {
+            let html = `
+                <div class="flex gap-3 overflow-x-auto no-scrollbar pb-6">
+                    ${tripData.itinerary.map(d => `
+                        <button onclick="setDay(${d.day})" class="flex-shrink-0 px-6 py-2 rounded-full font-black text-sm transition-all ${currentDay === d.day ? 'bg-mint text-white shadow-lg' : 'bg-white text-gray-400'}">
+                            DAY ${d.day}
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="mb-5 px-1">
+                    <h2 class="text-2xl font-black text-gray-800 leading-tight">${tripData.itinerary[currentDay-1].title}</h2>
+                    <p class="text-sm text-mint font-bold mt-1 tracking-wide">${tripData.itinerary[currentDay-1].date}</p>
+                </div>
+                <div class="space-y-5">
+                    ${tripData.itinerary[currentDay-1].events.map(ev => `
+                        <div class="${ev.type === 'transport' ? 'transport-card' : 'glass-card'} p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="time-badge">${ev.time}</span>
+                                <div class="flex gap-2">
+                                    <a href="${ev.map}" target="_blank" class="w-9 h-9 flex items-center justify-center bg-softBg text-mint rounded-xl shadow-inner active:bg-mint active:text-white transition-colors">
+                                        <i class="fas fa-directions text-lg"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <h3 class="font-black text-gray-800 text-lg">${ev.title}</h3>
+                            <p class="text-xs text-gray-500 mt-1 font-medium leading-relaxed">${ev.desc}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('app').innerHTML = html;
+        }
+
+        function setDay(d) { currentDay = d; renderPlan(); }
+
+        // --- WALLET 模組 ---
+        function renderWallet() {
+            const total = expenses.reduce((s, e) => s
