@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SINGAPORE 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#70aca7',     /* 薄荷綠 */
+                        secondary: '#daefeb',   /* 淺青色 */
+                        accent: '#ffca05',      /* 亮黃色 */
+                        danger: '#f0603c',      /* 橘紅色 */
+                        bglight: '#f8fbfb'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 字體族群設定：優先使用源樣黑體 (GenYoGothic JP) */
+        body { 
+            font-family: 'GenYoGothic JP', 'Noto Sans TC', 'Quicksand', sans-serif; 
+            background-color: #f8fbfb; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        /* 標題專用字體樣式 - JP Heavy */
+        .font-header-heavy {
+            font-family: 'GenYoGothic JP H', 'GenYoGothic JP', 'Noto Sans TC', sans-serif;
+            font-weight: 900;
+        }
+
+        /* 行程標題專用字體樣式 - JP Bold */
+        .font-plan-bold {
+            font-family: 'GenYoGothic JP Bold', 'GenYoGothic JP', 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-decoration: none !important;
+            font-style: normal !important;
+        }
+
+        .glass-card { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(112, 172, 167, 0.1); }
+        .day-btn-active { background-color: #70aca7 !important; color: white !important; transform: scale(1.05); }
+        .nav-active { color: #70aca7 !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .important-time { color: #f0603c; font-weight: bold; }
+        .magazine-divider { height: 2px; background: linear-gradient(to right, #70aca7, transparent); margin: 1rem 0; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <header class="bg-primary text-white p-6 rounded-b-[40px] shadow-lg sticky top-0 z-50">
+        <div class="flex justify-between items-start mb-5">
+            <div>
+                <h1 class="text-2xl font-header-heavy tracking-tight uppercase">SINGAPORE 2026</h1>
+                <p class="text-xs opacity-80 mt-1">獅城深度冒險 | 1/29 - 2/4</p>
+            </div>
+            <span class="bg-[#f0603c] text-white text-[11px] px-3 py-1 rounded-full font-bold shadow-sm">
+                3 adult
+            </span>
+        </div>
+        
+        <div id="day-selector" class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            </div>
+    </header>
+
+    <main id="app-body" class="p-4 max-w-md mx-auto">
+        </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-center py-3 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-50">
+        <button onclick="switchView('PLAN')" id="nav-PLAN" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-calendar-alt text-lg"></i><span class="text-[10px] font-bold">PLAN</span>
+        </button>
+        <button onclick="switchView('GUIDE')" id="nav-GUIDE" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-book-open text-lg"></i><span class="text-[10px] font-bold">GUIDE</span>
+        </button>
+        <button onclick="switchView('WALLET')" id="nav-WALLET" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-wallet text-lg"></i><span class="text-[10px] font-bold">WALLET</span>
+        </button>
+        <button onclick="switchView('LISTS')" id="nav-LISTS" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-clipboard-list text-lg"></i><span class="text-[10px] font-bold">LISTS</span>
+        </button>
+        <button onclick="switchView('INFO')" id="nav-INFO" class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-info-circle text-lg"></i><span class="text-[10px] font-bold">INFO</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- 旅遊數據資料庫 ---
+        const DATA = [
+            { day: 1, date: "1/29 (四)", title: "抵達獅城：深夜安置", events: [
+                { time: "20:55", act: "抵達樟宜機場", desc: "領取行李與辦理入關手續" },
+                { time: "22:15", act: "交通：地鐵棕線 (TEL)", desc: "機場站出發至 Havelock (TE16) 站 (約 50 分鐘)", type: "trans" },
+                { time: "23:00", act: "辦理入住：Furama RiverFront", desc: "405 Havelock Rd, 169633", gmaps: "https://maps.app.goo.gl/uKfrPo1uFNfxjaqQ7", important: true },
+                { time: "深夜", act: "羅伯遜碼頭深夜採買", desc: "7-Eleven 或 Cheers (步行 5-8 分)", type: "food" }
+            ]},
+            { day: 2, date: "1/30 (五)", title: "聖淘沙：魔法與大冒險", events: [
+                { time: "08:30", act: "早餐：中峇魯市場", desc: "推薦：楗柏水粿、中峇魯滷麵。公車 123 號搭 3 站。", gmaps: "https://maps.app.goo.gl/mj9UWKWEzN1XMnccA", type: "food" },
+                { time: "11:00", act: "斜坡滑車 (Skyline Luge)", desc: "玩 4 趟體驗速度感", gmaps: "https://maps.app.goo.gl/SvAeCqqJtydQX1gG9", important: true },
+                { time: "14:30", act: "哈利波特：魔法幻象", desc: "預約制場次，需提前抵達", gmaps: "https://maps.app.goo.gl/Z7NWpqknXrZbMkow9", important: true },
+                { time: "17:00", act: "聖淘沙賭場 & 巴拉望海灘", desc: "漫步海邊欣賞風景", gmaps: "https://maps.app.goo.gl/h37hz55P4ou1Cj7k8" },
+                { time: "19:00", act: "晚餐：VivoCity 美食閣", desc: "Food Republic 多樣化熟食選擇", gmaps: "https://maps.app.goo.gl/e9233GrMhVF6xSrS8", type: "food" }
+            ]},
+            { day: 3, date: "1/31 (六)", title: "萬態園區：飛禽世界", events: [
+                { time: "09:00", act: "景點：飛禽公園 (Bird Paradise)", desc: "準時入場。停留 4.5 小時。", gmaps: "https://maps.app.goo.gl/Xk3hE1QidMo8wuFd7", important: true },
+                { time: "SHOW", act: "表演：飛翔掠食者", desc: "10:30 & 14:30 @ 天空露天劇場", type: "info" },
+                { time: "SHOW", act: "表演：世界之翼", desc: "12:30 & 17:00 @ 天空露天劇場", type: "info" },
+                { time: "16:30", act: "小印度區 & 小阿拉伯", desc: "印度文化與哈芝巷文化探索", gmaps: "https://maps.app.goo.gl/ci3xywLXi4LRDwWUA" },
+                { time: "17:00", act: "蘇丹回教堂周邊", desc: "探索小阿拉伯區風景", gmaps: "https://maps.app.goo.gl/MmCEYcohn8h8ai6W8" },
+                { time: "18:30", act: "晚餐：Zam Zam 印度煎餅", desc: "百年老店，推薦雞肉/牛肉煎餅", gmaps: "https://maps.app.goo.gl/j9kA9rBKxZXc7YJV6", type: "food" }
+            ]},
+            { day: 4, date: "2/1 (日)", title: "城市經典：藝術美學", events: [
+                { time: "09:00", act: "早餐：Tiong Bahru Bakery", desc: "Fort Canning 店，步行可達", gmaps: "https://maps.app.goo.gl/2VBc5tZzu9Ny4DFN6", type: "food" },
+                { time: "10:00", act: "新加坡國家博物館", desc: "探索新加坡歷史與文化", gmaps: "https://maps.app.goo.gl/1oSVj1DE5Th4w2cdA", important: true },
+                { time: "15:00", act: "新加坡國家美術館", desc: "欣賞舊法院改建的藝術殿堂", gmaps: "https://maps.app.goo.gl/SqhVmuPp3aQVJo1p6" },
+                { time: "17:30", act: "魚尾獅公園", desc: "經典地標拍照打卡", gmaps: "https://maps.app.goo.gl/M4Rz5U6Y6u9xWv9a7" },
+                { time: "19:15", act: "晚餐：Shake Shack", desc: "濱海灣花園店", gmaps: "https://maps.app.goo.gl/rdbQkw3K83rWsYAP9", type: "food" },
+                { time: "19:45", act: "天空樹燈光秀", desc: "Supertree Grove 表演", gmaps: "https://maps.app.goo.gl/zTT7ibos9pKMq3Sg8", important: true },
+                { time: "21:00", act: "金沙酒店水舞秀 Spectra", desc: "欣賞壯觀水幕表演", gmaps: "https://maps.app.goo.gl/x6SpaX4GZFkBguLh9", important: true }
+            ]},
+            { day: 5, date: "2/2 (一)", title: "萬態園區：經典動物", events: [
+                { time: "08:30", act: "景點：新加坡動物園", desc: "探索世界頂尖開放式動物園", gmaps: "https://maps.app.goo.gl/qdFCiCGEJXZ1cAXJ6", important: true },
+                { time: "SHOW", act: "表演：海洋動物表演", desc: "10:30 & 17:00 @ 邵氏表演劇場", type: "info" },
+                { time: "13:00", act: "午餐：Ah Meng Restaurant", desc: "園區內知名南洋風味餐廳", gmaps: "https://maps.app.goo.gl/FUvccjmgbKCuzbVr7", type: "food" },
+                { time: "18:00", act: "晚餐：Ulu Ulu Safari", desc: "夜間動物園入口處自助/單點", gmaps: "https://maps.app.goo.gl/qWsTgaHyWzJ2YhGYA", type: "food" },
+                { time: "19:15", act: "夜間野生動物園 (Night Safari)", desc: "19:30 夜晚精靈表演", gmaps: "https://maps.app.goo.gl/4eqC1Gg7zCKjuCe7A", important: true }
+            ]},
+            { day: 6, date: "2/3 (二)", title: "亞洲雨林：探險巡航", events: [
+                { time: "09:00", act: "景點：亞洲雨林探險園", desc: "Rainforest Wild Asia 準時抵達", gmaps: "https://maps.app.goo.gl/TkBFp4i5rYMHAgyu6", important: true },
+                { time: "12:30", act: "午餐：Cavern Restaurant", desc: "沉浸式洞穴景觀餐飲", gmaps: "https://maps.app.goo.gl/JD42ufNrztRpWFio9", type: "food" },
+                { time: "17:00", act: "克拉碼頭伴手禮採買", desc: "漫步碼頭，採購特色商品", gmaps: "https://maps.app.goo.gl/ThcxuTFkBfDVD9q99", important: true },
+                { time: "18:30", act: "晚餐：松發肉骨茶", desc: "克拉碼頭總店，胡椒香味濃郁", gmaps: "https://maps.app.goo.gl/tav5mxqcuvBDNrnBA", type: "food", important: true }
+            ]},
+            { day: 7, date: "2/4 (三)", title: "星耀樟宜：瀑布收尾", events: [
+                { time: "10:00", act: "星耀樟宜：雨漩渦", desc: "觀賞世界最高室內瀑布", gmaps: "https://maps.app.goo.gl/b6tzku5T1Q61SKyS8", important: true },
+                { time: "11:00", act: "FairPrice Finest 最後採買", desc: "B2 超市買叻沙與蛋糕", gmaps: "https://maps.app.goo.gl/2p2463ucRoP9vDe88", type: "shop" },
+                { time: "12:30", act: "飛機起飛", desc: "酷行 TR896 回程返台", type: "trans" }
+            ]}
+        ];
+
+        // --- 核心邏輯 ---
+        let currentView = 'PLAN';
+        let currentDay = 1;
+        let rate = localStorage.getItem('sg_rate') || 24;
+        let expenses = JSON.parse(localStorage.getItem('sg_expenses') || '[]');
+
+        function init() {
+            renderDaySelector();
+            switchView('PLAN');
+        }
+
+        function renderDaySelector() {
+            const container = document.getElementById('day-selector');
+            container.innerHTML = DATA.map(d => `
+                <button onclick="setDay(${d.day})" id="day-btn-${d.day}" 
+                    class="day-btn flex-shrink-0 px-5 py-2 rounded-full text-xs font-bold bg-secondary/50 text-primary transition-all">
+                    Day ${d.day}
+                </button>
+            `).join('');
+            updateDaySelectorUI();
+        }
+
+        function setDay(d) {
+            currentDay = d;
+            updateDaySelectorUI();
+            if (currentView === 'PLAN') renderPlan();
+        }
+
+        function updateDaySelectorUI() {
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('day-btn-active'));
+            const activeBtn = document.getElementById(`day-btn-${currentDay}`);
+            if (activeBtn) activeBtn.classList.add('day-btn-active');
+        }
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('button[id^="nav-"]').forEach(btn => btn.classList.remove('nav-active'));
+            document.getElementById(`nav-${view}`).classList.add('nav-active');
+            document.getElementById('day-selector').style.display = (view === 'PLAN') ? 'flex' : 'none';
+            renderBody();
+        }
+
+        function renderBody() {
+            const body = document.getElementById('app-body');
+            body.innerHTML = '';
+            if (currentView === 'PLAN') renderPlan();
+            else if (currentView === 'GUIDE') renderGuide();
+            else if (currentView === 'WALLET') renderWallet();
+            else if (currentView === 'LISTS') renderLists();
+            else if (currentView === 'INFO') renderInfo();
+        }
+
+        function renderPlan() {
+            const body = document.getElementById('app-body');
+            const dayData = DATA.find(d => d.day === currentDay);
+            let html = `<div class="mb-5"><h2 class="text-xl font-plan-bold text-primary">${dayData.date} | ${dayData.title}</h2></div>`; 
+            dayData.events.forEach(ev => {
+                html += `
+                <div class="glass-card mb-4 p-5 rounded-[28px] shadow-sm border-l-4 ${ev.important ? 'border-danger' : 'border-primary'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] ${ev.important ? 'important-time' : 'text-primary'} font-bold">
+                            <i class="far fa-clock mr-1"></i> ${ev.time}
+                        </span>
+                        ${ev.gmaps ? `<a href="${ev.gmaps}" target="_blank" class="text-[10px] bg-secondary px-3 py-1 rounded-full text-primary font-bold shadow-sm">GOOGLE MAPS</a>` : ''}
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm">${ev.act}</h3>
+                    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">${ev.desc}</p>
+                </div>`;
+            });
+            body.innerHTML = html;
+        }
+
+        function renderGuide() {
+            const body = document.getElementById('app-body');
+            const guides = [
+                { name: "中峇魯 (Tiong Bahru)", info: "新加坡最老住宅區，融合 1930 年代建築與現代咖啡館。" },
+                { name: "飛禽公園 (Bird Paradise)", info: "世界頂尖飛禽公園，必看 Predators on Wings 表演。" },
+                { name: "國家美術館", info: "展現極致藝術美感，由歷史建築改建。" },
+                { name: "星耀樟宜 (Jewel)", info: "40 米高雨漩渦瀑布，森林美學奇蹟。" }
+            ];
+            body.innerHTML = `<h2 class="text-2xl font-plan-bold text-primary mb-6">深度導覽</h2>` + 
+                guides.map(g => `
+                <div class="mb-10">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">${g.name}</h3>
+                    <div class="magazine-divider"></div>
+                    <p class="text-sm text-gray-600 leading-loose mb-4">${g.info}</p>
+                    <iframe width="100%" height="180" class="rounded-2xl" frameborder="0" src="https://www.openstreetmap.org/export/embed.html?layer=mapnik"></iframe>
+                </div>`).join('');
+        }
+
+        function renderWallet() {
+            const body = document.getElementById('app-body');
+            body.innerHTML = `
+                <div class="bg-primary/10 p-6 rounded-[32px] mb-6 shadow-inner">
+                    <h3 class="font-bold text-primary mb-4 flex items-center"><i class="fas fa-coins mr-2"></i> 匯率設定 (1 SGD :)</h3>
+                    <input type="number" id="rate-setting" oninput="updateRateSetting()" 
+                        class="w-full p-4 rounded-2xl border-none outline-none font-bold text-xl text-primary shadow-inner" value="${rate}">
+                </div>
+                <div class="bg-white p-6 rounded-[32px] shadow-sm border border-secondary mb-6">
+                    <h3 class="font-bold text-gray-700 mb-4 text-sm">新增帳目</h3>
+                    <input type="text" id="exp-name" placeholder="品項名稱" class="w-full mb-3 p-3 bg-bglight rounded-xl text-xs outline-none">
+                    <div class="flex gap-2 mb-4">
+                        <input type="number" id="exp-amt" placeholder="金額 (SGD)" class="flex-1 p-3 bg-bglight rounded-xl text-xs outline-none font-bold">
+                        <label class="bg-secondary p-3 rounded-xl cursor-pointer active:scale-90 transition">
+                            <i class="fas fa-camera text-primary"></i>
+                            <input type="file" id="exp-img" class="hidden" accept="image/*" onchange="compressImage(this)">
+                        </label>
+                    </div>
+                    <button onclick="addExpense()" class="w-full bg-primary text-white font-bold py-3 rounded-2xl shadow-lg active:scale-95 transition">紀錄開支</button>
+                </div>
+                <div id="expense-list" class="space-y-3"></div>`;
+            loadExpenses();
+        }
+
+        function renderLists() {
+            const body = document.getElementById('app-body');
+            const items = ['護照', '網卡', '雨衣/傘', '行動電源', '充電器', '薄外套', '防蚊液', '3個空水壺'];
+            const checked = JSON.parse(localStorage.getItem('sg_checklist') || "{}");
+            body.innerHTML = `
+                <h2 class="text-2xl font-plan-bold text-primary mb-6">行李與備忘</h2>
+                <div class="glass-card p-6 rounded-[32px] mb-8 shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-4 text-sm">Checklist</h3>
+                    ${items.map((item, i) => `<label class="flex items-center gap-4 py-3 border-b border-gray-50 last:border-none"><input type="checkbox" class="w-5 h-5 accent-primary" id="chk-${i}" ${checked[i] ? 'checked' : ''} onchange="saveChecklist(${i})"><span class="text-sm font-medium text-gray-600">${item}</span></label>`).join('')}
+                </div>
+                <div class="glass-card p-6 rounded-[32px] shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-4 text-sm">隨手筆記</h3>
+                    <textarea id="note-area" oninput="saveNotes()" class="w-full h-40 p-4 bg-bglight rounded-2xl border-none outline-none text-xs leading-relaxed" placeholder="輸入網址將自動連結...">${localStorage.getItem('sg_notes') || ""}</textarea>
+                    <div id="note-links" class="flex flex-wrap gap-2 mt-4"></div>
+                </div>`;
+            saveNotes();
+        }
+
+        function renderInfo() {
+            const body = document.getElementById('app-body');
+            body.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <a href="https://www.weather.gov.sg/home/" target="_blank" class="bg-blue-50 p-5 rounded-[32px] flex flex-col items-center gap-2 shadow-sm"><i class="fas fa-cloud-sun text-blue-400 text-3xl"></i><span class="text-xs font-bold text-blue-600">氣象即時預報</span></a>
+                    <div class="bg-red-50 p-5 rounded-[32px] flex flex-col items-center gap-2 shadow-sm" onclick="alert('報警: 999\\n救護車: 995')"><i class="fas fa-phone-alt text-red-400 text-3xl"></i><span class="text-xs font-bold text-red-600">緊急聯絡: 999</span></div>
+                </div>
+
+                <div class="glass-card p-6 rounded-[32px] border-l-4 border-danger mb-6 shadow-sm">
+                    <h3 class="font-bold text-danger mb-3 text-sm">☔ 雨天備案</h3>
+                    <ul class="text-[11px] text-gray-600 space-y-2 leading-relaxed italic">
+                        <li>• <b>聖淘沙：</b>改往 S.E.A. 海洋館 (室內)。</li>
+                        <li>• <b>萬態園區：</b>改往濱海灣溫室 (Cloud Forest)。</li>
+                        <li>• <b>商場備案：</b>前往 Funan Digital Mall。</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 rounded-[32px] border-l-4 border-primary shadow-sm mb-6">
+                    <h3 class="font-bold text-primary mb-3 text-sm">💡 獅城實用攻略</h3>
+                    <ul class="text-[11px] text-gray-600 space-y-3 leading-relaxed">
+                        <li>• <b>SimplyGo：</b>直接感應信用卡支付，無須購買儲值卡。</li>
+                        <li>• <b>飲水：</b>新加坡自來水可飲用，萬態園區買水極貴。</li>
+                        <li>• <b>公車：</b>不報站，請盯著 Google Maps 定位提前按鈴。</li>
+                    </ul>
+                </div>`;
+        }
+
+        // --- 功能邏輯實作 ---
+        function updateRateSetting() {
+            rate = document.getElementById('rate-setting').value || 24;
+            localStorage.setItem('sg_rate', rate);
+            loadExpenses();
+        }
+
+        let currentBase64 = "";
+        function compressImage(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 250; canvas.height = img.height * (250 / img.width);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    currentBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                    alert("收據存檔成功！");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const amt = document.getElementById('exp-amt').value;
+            if(!name || !amt) return;
+            const expenses = JSON.parse(localStorage.getItem('sg_expenses') || "[]");
+            expenses.unshift({ name, amt, img: currentBase64, id: Date.now() });
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            currentBase64 = ""; renderWallet();
+        }
+
+        function loadExpenses() {
+            const container = document.getElementById('expense-list');
+            if(!container) return;
+            const expenses = JSON.parse(localStorage.getItem('sg_expenses') || "[]");
+            container.innerHTML = expenses.map(ex => `
+                <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-50">
+                    ${ex.img ? `<img src="${ex.img}" class="w-12 h-12 rounded-xl object-cover shadow-sm">` : '<div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-[10px] text-gray-300">N/A</div>'}
+                    <div class="flex-1">
+                        <div class="text-xs font-bold text-gray-700">${ex.name}</div>
+                        <div class="text-[10px] text-primary font-bold">S$ ${ex.amt} <span class="text-gray-300 font-normal">≈ NT$ ${Math.round(ex.amt * rate)}</span></div>
+                    </div>
+                    <button onclick="deleteExpense(${ex.id})" class="text-gray-200 p-2"><i class="fas fa-trash-alt"></i></button>
+                </div>`).join('');
+        }
+
+        function deleteExpense(id) {
+            let expenses = JSON.parse(localStorage.getItem('sg_expenses') || "[]");
+            expenses = expenses.filter(e => e.id !== id);
+            localStorage.setItem('sg_expenses', JSON.stringify(expenses));
+            loadExpenses();
+        }
+
+        function saveChecklist(i) {
+            const checked = JSON.parse(localStorage.getItem('sg_checklist') || "{}");
+            checked[i] = document.getElementById(`chk-${i}`).checked;
+            localStorage.setItem('sg_checklist', JSON.stringify(checked));
+        }
+
+        function saveNotes() {
+            const text = document.getElementById('note-area').value;
+            localStorage.setItem('sg_notes', text);
+            const container = document.getElementById('note-links');
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const urls = text.match(urlRegex);
+            container.innerHTML = urls ? urls.map(url => `<a href="${url}" target="_blank" class="bg-secondary text-primary px-3 py-1 rounded-full text-[9px] font-bold shadow-sm"><i class="fas fa-link mr-1"></i>快捷連結</a>`).join('') : '';
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
